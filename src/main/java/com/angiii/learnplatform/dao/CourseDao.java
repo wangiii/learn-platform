@@ -26,13 +26,13 @@ public interface CourseDao {
 
     @Insert("insert into tb_course(name, cover, credit, semester, class_hour, created_at, updated_at) " +
             "values(#{name}, #{cover}, #{credit}, #{semester}, #{classHour}, #{createTime}, #{updateTime})")
-    void insert(Course course);
+    int insert(Course course);
 
     @Delete("delete from tb_course where id = #{id}")
-    void delete(Long id);
+    int delete(Long id);
 
     @Update("update tb_course set " +
             "name = #{name}, cover = #{cover}, credit = #{credit}, semester = #{semester}, class_hour = #{classHour}, updated_at = #{updateTime} " +
             "where id = #{id}")
-    void update(Course course);
+    int update(Course course);
 }

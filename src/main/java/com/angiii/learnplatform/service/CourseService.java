@@ -2,6 +2,7 @@ package com.angiii.learnplatform.service;
 
 import com.angiii.learnplatform.dao.CourseDao;
 import com.angiii.learnplatform.model.Course;
+import com.angiii.learnplatform.model.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,30 +15,46 @@ public class CourseService {
     @Autowired
     private CourseDao courseDao;
 
-    public List<Course> all() {
+    public RespBean all() {
         List<Course> courses = courseDao.getAll();
-        return courses;
+        return RespBean.ok("查询成功", courses);
     }
 
-    public void save(Course course) {
+    public RespBean save(Course course) {
         if (course != null && course.getName() != null) {
             course.setUpdateTime(new Date());
             course.setCreateTime(new Date());
-            courseDao.insert(course);
+            if (courseDao.insert(course) == 1) {
+                return RespBean.ok("添加成功", course);
+            }
         }
+        return RespBean.error("添加失败");
     }
 
-    public Course find(Long id) {
-        return courseDao.selectCourseById(id);
+    public RespBean find(Long id) {
+        Course course = courseDao.selectCourseById(id);
+        if (course != null) {
+            return RespBean.ok("查询成功", course);
+        }
+        return RespBean.error("查询失败");
     }
 
-    public void delete(Long id) {
-        courseDao.delete(id);
+    public RespBean delete(Long id) {
+        if (courseDao.delete(id) == 1) {
+            return RespBean.ok("删除成功");
+        }
+        return RespBean.error("删除失败");
     }
 
-    public void update(Long id, Course course) {
-        course.setId(id);
-        course.setUpdateTime(new Date());
-        courseDao.update(course);
+    public RespBean update(Long id, Course course) {
+        if (course != null && course.getName() != null) {
+            course.setId(id);
+            course.setUpdateTime(new Date());
+            if (courseDao.update(course) == 1) {
+                Course RealCourse = courseDao.selectCourseById(course.getId());
+                return RespBean.ok("更新成功", RealCourse);
+            }
+        }
+        return RespBean.error("更新失败");
     }
 }
