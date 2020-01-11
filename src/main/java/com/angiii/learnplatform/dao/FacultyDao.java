@@ -1,6 +1,6 @@
 package com.angiii.learnplatform.dao;
 
-import com.angiii.learnplatform.model.Faculty;
+import com.angiii.learnplatform.po.Faculty;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 

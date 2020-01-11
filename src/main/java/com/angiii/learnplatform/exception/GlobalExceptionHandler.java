@@ -1,6 +1,6 @@
 package com.angiii.learnplatform.exception;
 
-import com.angiii.learnplatform.model.RespBean;
+import com.angiii.learnplatform.dto.RespBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,6 +17,12 @@ public class GlobalExceptionHandler {
             return RespBean.error("该数据有关联数据，操作失败!");
         }
         return RespBean.error("数据库异常，操作失败!");
+    }
+
+    @ExceptionHandler(BadLoginException.class)
+    public RespBean loginException(BadLoginException e) {
+        log.error("用户名或者密码错误", e);
+        return RespBean.error(e.getMsg());
     }
 
     @ExceptionHandler(Exception.class)

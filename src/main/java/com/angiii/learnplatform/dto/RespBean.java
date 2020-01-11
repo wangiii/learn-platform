@@ -1,4 +1,4 @@
-package com.angiii.learnplatform.model;
+package com.angiii.learnplatform.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,10 +14,6 @@ public class RespBean implements Serializable {
     private Integer code;
     private String msg;
     private Object data;
-
-    public static RespBean build() {
-        return new RespBean();
-    }
 
     public static RespBean ok(String msg) {
         return new RespBean(200, msg, null);

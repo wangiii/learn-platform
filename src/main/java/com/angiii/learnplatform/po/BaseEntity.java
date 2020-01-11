@@ -1,4 +1,4 @@
-package com.angiii.learnplatform.model;
+package com.angiii.learnplatform.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

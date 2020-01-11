@@ -1,8 +1,8 @@
 package com.angiii.learnplatform.service;
 
 import com.angiii.learnplatform.dao.CourseDao;
-import com.angiii.learnplatform.model.Course;
-import com.angiii.learnplatform.model.RespBean;
+import com.angiii.learnplatform.po.Course;
+import com.angiii.learnplatform.dto.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

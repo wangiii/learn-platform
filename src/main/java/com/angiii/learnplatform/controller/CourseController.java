@@ -1,7 +1,7 @@
 package com.angiii.learnplatform.controller;
 
-import com.angiii.learnplatform.model.Course;
-import com.angiii.learnplatform.model.RespBean;
+import com.angiii.learnplatform.po.Course;
+import com.angiii.learnplatform.dto.RespBean;
 import com.angiii.learnplatform.service.CourseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

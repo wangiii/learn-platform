@@ -1,5 +1,6 @@
-package com.angiii.learnplatform.model;
+package com.angiii.learnplatform.po;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.io.Serializable;
@@ -25,7 +26,13 @@ public class Teacher extends BaseEntity implements Serializable {
     /**
      * 教师密码
      */
+    @JsonIgnore
     private String password;
+
+    /**
+     * 是否激活
+     */
+    private boolean isActive;
 
     /**
      * 教师所属院系

@@ -1,6 +1,6 @@
 package com.angiii.learnplatform.dao;
 
-import com.angiii.learnplatform.model.Course;
+import com.angiii.learnplatform.po.Course;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

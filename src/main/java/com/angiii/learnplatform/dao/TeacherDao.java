@@ -1,7 +1,28 @@
 package com.angiii.learnplatform.dao;
 
-import org.apache.ibatis.annotations.Mapper;
+import com.angiii.learnplatform.po.Teacher;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface TeacherDao {
+
+    @Select("select * from tb_teacher")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    List<Teacher> getAll();
+
+    @Insert("insert into tb_teacher(name, phone, password, created_at, updated_at) " +
+            "values(#{name}, #{phone}, #{password}, #{createTime}, #{updateTime})")
+    int insert(Teacher teacher);
+
+    @Select("select * from tb_teacher where phone = #{phone} limit 1")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    Teacher selectTeacherByPhone(@Param("phone") String phone);
 }
