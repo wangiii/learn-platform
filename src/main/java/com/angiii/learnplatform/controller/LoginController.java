@@ -12,12 +12,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
+@CrossOrigin
 public class LoginController {
 
     @Autowired
@@ -29,9 +31,9 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtTokenUtil;
 
-    @PostMapping(value = "/login")
+    @PostMapping(value = "login")
     public RespBean login(@RequestBody AuthenticationRequest authenticationRequest) throws BadLoginException {
-        log.info("用户名：{}, 密码{}",authenticationRequest.getUsername(),authenticationRequest.getPassword());
+        log.info("用户名：{}, 密码{}", authenticationRequest.getUsername(), authenticationRequest.getPassword());
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
@@ -47,6 +49,6 @@ public class LoginController {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return RespBean.ok("登录成功", new AuthenticationResponse(jwt));
+        return RespBean.ok("登录成功", new AuthenticationResponse(authenticationRequest.getUsername(), jwt));
     }
 }

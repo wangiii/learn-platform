@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("course")
+@CrossOrigin
 public class CourseController {
 
     @Autowired
