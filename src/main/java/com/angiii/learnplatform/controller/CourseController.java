@@ -5,6 +5,7 @@ import com.angiii.learnplatform.dto.RespBean;
 import com.angiii.learnplatform.service.CourseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -17,26 +18,31 @@ public class CourseController {
     private CourseService courseService;
 
     @GetMapping("/")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean getAllCourse() {
         return courseService.all();
     }
 
     @PostMapping("/")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean addCourse(Course course) {
         return courseService.save(course);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean findCourseById(@PathVariable(name = "id") Long id) {
         return courseService.find(id);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean updateCourse(@PathVariable(name = "id") Long id, Course course) {
         return courseService.update(id, course);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean deleteCourse(@PathVariable(name = "id") Long id) {
         return courseService.delete(id);
     }

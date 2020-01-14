@@ -2,6 +2,7 @@ package com.angiii.learnplatform.exception;
 
 import com.angiii.learnplatform.dto.RespBean;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,6 +25,13 @@ public class GlobalExceptionHandler {
         log.error("用户名或者密码错误", e);
         return RespBean.error(e.getMsg());
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public RespBean deniedException(AccessDeniedException e) {
+        log.error("没有权限访问", e);
+        return RespBean.error(403, "你没有权限访问");
+    }
+
 
     @ExceptionHandler(Exception.class)
     public RespBean exception(Exception e) {
