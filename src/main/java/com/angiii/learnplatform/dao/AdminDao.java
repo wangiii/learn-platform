@@ -11,5 +11,5 @@ public interface AdminDao {
             @Result(property = "createTime", column = "created_at"),
             @Result(property = "updateTime", column = "updated_at")
     })
-    Admin selectTeacherByPhone(@Param("phone") String phone);
+    Admin selectAdminByPhone(@Param("phone") String phone);
 }

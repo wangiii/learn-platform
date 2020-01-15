@@ -35,7 +35,7 @@ public class MyUserDetailsService implements UserDetailsService {
             return new User(teacher.getPhone(), teacher.getPassword(), authorities);
         }
 
-        Admin admin = adminDao.selectTeacherByPhone(s);
+        Admin admin = adminDao.selectAdminByPhone(s);
         if (admin != null) {
             SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
             ArrayList<GrantedAuthority> authorities = new ArrayList<>();
