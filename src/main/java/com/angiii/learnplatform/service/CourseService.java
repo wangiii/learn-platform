@@ -1,8 +1,11 @@
 package com.angiii.learnplatform.service;
 
 import com.angiii.learnplatform.dao.CourseDao;
+import com.angiii.learnplatform.dto.PageRequest;
 import com.angiii.learnplatform.po.Course;
 import com.angiii.learnplatform.dto.RespBean;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +18,18 @@ public class CourseService {
     @Autowired
     private CourseDao courseDao;
 
-    public RespBean all() {
+    public RespBean all(PageRequest pageRequest) {
+        int pageNum = 1;
+        int pageSize = 2;
+        if (pageRequest != null) {
+            pageNum = pageRequest.getPageNum();
+            pageSize = pageRequest.getPageSize();
+        }
+        PageHelper.startPage(pageNum, pageSize);
         List<Course> courses = courseDao.getAll();
-        return RespBean.ok("查询成功", courses);
+        PageInfo<Course> pageInfo = new PageInfo<>(courses);
+
+        return RespBean.ok("查询成功", pageInfo);
     }
 
     public RespBean save(Course course) {

@@ -1,5 +1,6 @@
 package com.angiii.learnplatform.controller;
 
+import com.angiii.learnplatform.dto.PageRequest;
 import com.angiii.learnplatform.po.Course;
 import com.angiii.learnplatform.dto.RespBean;
 import com.angiii.learnplatform.service.CourseService;
@@ -19,8 +20,9 @@ public class CourseController {
 
     @GetMapping("/")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public RespBean getAllCourse() {
-        return courseService.all();
+    public RespBean getAllCourse(PageRequest pageRequest) {
+        log.info("pageRequest{}", pageRequest);
+        return courseService.all(pageRequest);
     }
 
     @PostMapping("/")
