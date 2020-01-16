@@ -16,6 +16,17 @@ public interface CourseDao {
     })
     List<Course> getAll();
 
+    @Select("select * from tb_course limit #{start}, #{amount}")
+    @Results({
+            @Result(property = "classHour", column = "class_hour"),
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    List<Course> getPage(Integer start, Integer amount);
+
+    @Select("select count(*) from tb_course ")
+    Integer getAllCount();
+
     @Select("select * from tb_course where id = #{id}")
     @Results({
             @Result(property = "classHour", column = "class_hour"),

@@ -2,10 +2,9 @@ package com.angiii.learnplatform.service;
 
 import com.angiii.learnplatform.dao.CourseDao;
 import com.angiii.learnplatform.dto.PageRequest;
+import com.angiii.learnplatform.dto.PageResponse;
 import com.angiii.learnplatform.po.Course;
 import com.angiii.learnplatform.dto.RespBean;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +19,25 @@ public class CourseService {
 
     public RespBean all(PageRequest pageRequest) {
         int pageNum = 1;
-        int pageSize = 2;
-        if (pageRequest != null) {
+        int pageSize = 5;
+        if (pageRequest != null
+                && pageRequest.getPageSize() > 0
+                && pageRequest.getPageNum() > 0) {
             pageNum = pageRequest.getPageNum();
             pageSize = pageRequest.getPageSize();
         }
-        PageHelper.startPage(pageNum, pageSize);
-        List<Course> courses = courseDao.getAll();
-        PageInfo<Course> pageInfo = new PageInfo<>(courses);
 
-        return RespBean.ok("查询成功", pageInfo);
+        Integer start = (pageNum - 1) * pageSize;
+        Integer amount = pageSize;
+        Integer total = courseDao.getAllCount();
+        Integer pages = total / pageSize + 1;
+        PageResponse pageResponse = PageResponse.builder().
+                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
+        List<Course> courses = courseDao.getPage(start, amount);
+        pageResponse.setList(courses);
+        pageResponse.setSize(courses.size());
+
+        return RespBean.ok("查询成功", pageResponse);
     }
 
     public RespBean save(Course course) {
@@ -59,7 +67,12 @@ public class CourseService {
     }
 
     public RespBean update(Long id, Course course) {
-        if (course != null && course.getName() != null) {
+        if (course != null
+                && course.getName() != null
+                && course.getClassHour() != null
+                && course.getCover() != null
+                && course.getSemester() != null
+                && course.getCredit() != null) {
             course.setId(id);
             course.setUpdateTime(new Date());
             if (courseDao.update(course) == 1) {
