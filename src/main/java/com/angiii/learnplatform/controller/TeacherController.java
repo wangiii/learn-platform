@@ -1,7 +1,7 @@
 package com.angiii.learnplatform.controller;
 
-import com.angiii.learnplatform.dto.RespBean;
-import com.angiii.learnplatform.po.Teacher;
+import com.angiii.learnplatform.domain.dto.RespBean;
+import com.angiii.learnplatform.domain.entity.Teacher;
 import com.angiii.learnplatform.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,9 +1,9 @@
 package com.angiii.learnplatform.service;
 
-import com.angiii.learnplatform.dao.AdminDao;
-import com.angiii.learnplatform.dao.TeacherDao;
-import com.angiii.learnplatform.po.Admin;
-import com.angiii.learnplatform.po.Teacher;
+import com.angiii.learnplatform.mapper.AdminMapper;
+import com.angiii.learnplatform.mapper.TeacherMapper;
+import com.angiii.learnplatform.domain.entity.Admin;
+import com.angiii.learnplatform.domain.entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,15 +19,15 @@ import java.util.ArrayList;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    TeacherDao teacherDao;
+    TeacherMapper teacherMapper;
 
     @Autowired
-    AdminDao adminDao;
+    AdminMapper adminMapper;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        Teacher teacher = teacherDao.selectTeacherByPhone(s);
+        Teacher teacher = teacherMapper.selectTeacherByPhone(s);
         if (teacher != null) {
             SimpleGrantedAuthority teacherAuthority = new SimpleGrantedAuthority("ROLE_TEACHER");
             ArrayList<GrantedAuthority> authorities = new ArrayList<>();
@@ -35,7 +35,7 @@ public class MyUserDetailsService implements UserDetailsService {
             return new User(teacher.getPhone(), teacher.getPassword(), authorities);
         }
 
-        Admin admin = adminDao.selectAdminByPhone(s);
+        Admin admin = adminMapper.selectAdminByPhone(s);
         if (admin != null) {
             SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
             ArrayList<GrantedAuthority> authorities = new ArrayList<>();

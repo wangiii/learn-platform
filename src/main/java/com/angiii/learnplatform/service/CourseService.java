@@ -1,10 +1,10 @@
 package com.angiii.learnplatform.service;
 
-import com.angiii.learnplatform.dao.CourseDao;
-import com.angiii.learnplatform.dto.PageRequest;
-import com.angiii.learnplatform.dto.PageResponse;
-import com.angiii.learnplatform.po.Course;
-import com.angiii.learnplatform.dto.RespBean;
+import com.angiii.learnplatform.mapper.CourseMapper;
+import com.angiii.learnplatform.domain.dto.PageRequest;
+import com.angiii.learnplatform.domain.dto.PageResponse;
+import com.angiii.learnplatform.domain.entity.Course;
+import com.angiii.learnplatform.domain.dto.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class CourseService {
 
     @Autowired
-    private CourseDao courseDao;
+    private CourseMapper courseMapper;
 
     public RespBean all(PageRequest pageRequest) {
         int pageNum = 1;
@@ -29,11 +29,11 @@ public class CourseService {
 
         Integer start = (pageNum - 1) * pageSize;
         Integer amount = pageSize;
-        Integer total = courseDao.getAllCount();
+        Integer total = courseMapper.getAllCount();
         Integer pages = total / pageSize + 1;
         PageResponse pageResponse = PageResponse.builder().
                 pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-        List<Course> courses = courseDao.getPage(start, amount);
+        List<Course> courses = courseMapper.getPage(start, amount);
         pageResponse.setList(courses);
         pageResponse.setSize(courses.size());
 
@@ -44,7 +44,7 @@ public class CourseService {
         if (course != null && course.getName() != null) {
             course.setUpdateTime(new Date());
             course.setCreateTime(new Date());
-            if (courseDao.insert(course) == 1) {
+            if (courseMapper.insert(course) == 1) {
                 return RespBean.ok("添加成功", course);
             }
         }
@@ -52,7 +52,7 @@ public class CourseService {
     }
 
     public RespBean find(Long id) {
-        Course course = courseDao.selectCourseById(id);
+        Course course = courseMapper.selectCourseById(id);
         if (course != null) {
             return RespBean.ok("查询成功", course);
         }
@@ -60,7 +60,7 @@ public class CourseService {
     }
 
     public RespBean delete(Long id) {
-        if (courseDao.delete(id) == 1) {
+        if (courseMapper.delete(id) == 1) {
             return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败");
@@ -75,8 +75,8 @@ public class CourseService {
                 && course.getCredit() != null) {
             course.setId(id);
             course.setUpdateTime(new Date());
-            if (courseDao.update(course) == 1) {
-                Course RealCourse = courseDao.selectCourseById(course.getId());
+            if (courseMapper.update(course) == 1) {
+                Course RealCourse = courseMapper.selectCourseById(course.getId());
                 return RespBean.ok("更新成功", RealCourse);
             }
         }

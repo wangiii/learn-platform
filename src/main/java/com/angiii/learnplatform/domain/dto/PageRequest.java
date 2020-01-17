@@ -1,4 +1,4 @@
-package com.angiii.learnplatform.dto;
+package com.angiii.learnplatform.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

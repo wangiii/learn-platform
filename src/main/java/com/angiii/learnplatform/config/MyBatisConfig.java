@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Configuration;
  * MyBatis 配置类
  */
 @Configuration
-@MapperScan("com.angiii.learnplatform.dao")
+@MapperScan("com.angiii.learnplatform.mapper")
 public class MyBatisConfig {
 }

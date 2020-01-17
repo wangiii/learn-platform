@@ -1,12 +1,12 @@
-package com.angiii.learnplatform.dao;
+package com.angiii.learnplatform.mapper;
 
-import com.angiii.learnplatform.po.Teacher;
+import com.angiii.learnplatform.domain.entity.Teacher;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
-public interface TeacherDao {
+public interface TeacherMapper {
 
     @Select("select * from tb_teacher")
     @Results({

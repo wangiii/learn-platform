@@ -1,12 +1,12 @@
-package com.angiii.learnplatform.dao;
+package com.angiii.learnplatform.mapper;
 
-import com.angiii.learnplatform.po.Faculty;
+import com.angiii.learnplatform.domain.entity.Faculty;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
-public interface FacultyDao {
+public interface FacultyMapper {
 
     @Insert("insert into tb_faculty(name, created_at, updated_at) " +
             "values(#{name}, #{createTime}, #{updateTime})")

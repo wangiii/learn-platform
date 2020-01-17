@@ -1,7 +1,7 @@
 package com.angiii.learnplatform.controller;
 
-import com.angiii.learnplatform.dto.AuthenticationRequest;
-import com.angiii.learnplatform.dto.RespBean;
+import com.angiii.learnplatform.domain.dto.AuthenticationRequest;
+import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

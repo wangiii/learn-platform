@@ -1,8 +1,8 @@
 package com.angiii.learnplatform.controller;
 
-import com.angiii.learnplatform.dto.PageRequest;
-import com.angiii.learnplatform.po.Faculty;
-import com.angiii.learnplatform.dto.RespBean;
+import com.angiii.learnplatform.domain.dto.PageRequest;
+import com.angiii.learnplatform.domain.entity.Faculty;
+import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.service.FacultyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

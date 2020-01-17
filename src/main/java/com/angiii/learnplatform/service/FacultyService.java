@@ -1,10 +1,10 @@
 package com.angiii.learnplatform.service;
 
-import com.angiii.learnplatform.dao.FacultyDao;
-import com.angiii.learnplatform.dto.PageRequest;
-import com.angiii.learnplatform.dto.PageResponse;
-import com.angiii.learnplatform.po.Faculty;
-import com.angiii.learnplatform.dto.RespBean;
+import com.angiii.learnplatform.mapper.FacultyMapper;
+import com.angiii.learnplatform.domain.dto.PageRequest;
+import com.angiii.learnplatform.domain.dto.PageResponse;
+import com.angiii.learnplatform.domain.entity.Faculty;
+import com.angiii.learnplatform.domain.dto.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +15,13 @@ import java.util.List;
 public class FacultyService {
 
     @Autowired
-    FacultyDao facultyDao;
+    FacultyMapper facultyMapper;
 
     public RespBean save(Faculty faculty) {
         if (faculty != null && faculty.getName() != null) {
             faculty.setUpdateTime(new Date());
             faculty.setCreateTime(new Date());
-            if (facultyDao.insert(faculty) == 1) {
+            if (facultyMapper.insert(faculty) == 1) {
                 return RespBean.ok("添加成功", faculty);
             }
         }
@@ -29,7 +29,7 @@ public class FacultyService {
     }
 
     public RespBean delete(Long id) {
-        if (facultyDao.delete(id) == 1) {
+        if (facultyMapper.delete(id) == 1) {
             return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败");
@@ -40,8 +40,8 @@ public class FacultyService {
                 && faculty.getName() != null) {
             faculty.setId(id);
             faculty.setUpdateTime(new Date());
-            if (facultyDao.update(faculty) == 1) {
-                Faculty RealFaculty = facultyDao.selectFacultyById(faculty.getId());
+            if (facultyMapper.update(faculty) == 1) {
+                Faculty RealFaculty = facultyMapper.selectFacultyById(faculty.getId());
                 return RespBean.ok("更新成功", RealFaculty);
             }
         }
@@ -60,11 +60,11 @@ public class FacultyService {
 
         Integer start = (pageNum - 1) * pageSize;
         Integer amount = pageSize;
-        Integer total = facultyDao.getAllCount();
+        Integer total = facultyMapper.getAllCount();
         Integer pages = total / pageSize + 1;
         PageResponse pageResponse = PageResponse.builder().
                 pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-        List<Faculty> faculties = facultyDao.getPage(start, amount);
+        List<Faculty> faculties = facultyMapper.getPage(start, amount);
         pageResponse.setList(faculties);
         pageResponse.setSize(faculties.size());
 

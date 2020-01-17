@@ -1,6 +1,6 @@
 package com.angiii.learnplatform.exception;
 
-import com.angiii.learnplatform.dto.RespBean;
+import com.angiii.learnplatform.domain.dto.RespBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,12 +1,12 @@
-package com.angiii.learnplatform.dao;
+package com.angiii.learnplatform.mapper;
 
-import com.angiii.learnplatform.po.Course;
+import com.angiii.learnplatform.domain.entity.Course;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
-public interface CourseDao {
+public interface CourseMapper {
 
     @Select("select * from tb_course")
     @Results({

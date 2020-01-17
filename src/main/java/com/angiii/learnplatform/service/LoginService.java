@@ -1,13 +1,13 @@
 package com.angiii.learnplatform.service;
 
-import com.angiii.learnplatform.dao.AdminDao;
-import com.angiii.learnplatform.dao.TeacherDao;
-import com.angiii.learnplatform.dto.AuthenticationRequest;
-import com.angiii.learnplatform.dto.AuthenticationResponse;
-import com.angiii.learnplatform.dto.RespBean;
+import com.angiii.learnplatform.mapper.AdminMapper;
+import com.angiii.learnplatform.mapper.TeacherMapper;
+import com.angiii.learnplatform.domain.dto.AuthenticationRequest;
+import com.angiii.learnplatform.domain.dto.AuthenticationResponse;
+import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.exception.BadLoginException;
-import com.angiii.learnplatform.po.Admin;
-import com.angiii.learnplatform.po.Teacher;
+import com.angiii.learnplatform.domain.entity.Admin;
+import com.angiii.learnplatform.domain.entity.Teacher;
 import com.angiii.learnplatform.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +31,10 @@ public class LoginService {
     private MyUserDetailsService userDetailsService;
 
     @Autowired
-    private AdminDao adminDao;
+    private AdminMapper adminMapper;
 
     @Autowired
-    private TeacherDao teacherDao;
+    private TeacherMapper teacherMapper;
 
     @Autowired
     private JwtUtil jwtTokenUtil;
@@ -64,7 +64,7 @@ public class LoginService {
 
         if (roles.contains("ROLE_ADMIN")) {
             role = "ROLE_ADMIN";
-            Admin admin = adminDao.selectAdminByPhone(authenticationRequest.getUsername());
+            Admin admin = adminMapper.selectAdminByPhone(authenticationRequest.getUsername());
             if (admin != null) {
                 userName = admin.getName();
             }
@@ -72,7 +72,7 @@ public class LoginService {
 
         if (roles.contains("ROLE_TEACHER")) {
             role = "ROLE_TEACHER";
-            Teacher teacher = teacherDao.selectTeacherByPhone(authenticationRequest.getUsername());
+            Teacher teacher = teacherMapper.selectTeacherByPhone(authenticationRequest.getUsername());
             if (teacher != null) {
                 userName = teacher.getName();
             }

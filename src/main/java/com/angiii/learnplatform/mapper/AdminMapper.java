@@ -1,10 +1,10 @@
-package com.angiii.learnplatform.dao;
+package com.angiii.learnplatform.mapper;
 
-import com.angiii.learnplatform.po.Admin;
+import com.angiii.learnplatform.domain.entity.Admin;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
-public interface AdminDao {
+public interface AdminMapper {
 
     @Select("select * from tb_admin where phone = #{phone} limit 1")
     @Results({
