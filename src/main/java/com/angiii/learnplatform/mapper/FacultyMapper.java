@@ -1,5 +1,6 @@
 package com.angiii.learnplatform.mapper;
 
+import com.angiii.learnplatform.domain.dto.FacultyDTO;
 import com.angiii.learnplatform.domain.entity.Faculty;
 import org.apache.ibatis.annotations.*;
 
@@ -18,6 +19,13 @@ public interface FacultyMapper {
             @Result(property = "updateTime", column = "updated_at")
     })
     List<Faculty> getPage(Integer start, Integer amount);
+
+    @Select("select id, name from tb_faculty")
+    @Results({
+            @Result(property = "value", column = "id"),
+            @Result(property = "label", column = "name")
+    })
+    List<FacultyDTO> getFacultyDTO();
 
     @Select("select count(*) from tb_faculty ")
     Integer getAllCount();

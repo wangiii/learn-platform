@@ -70,4 +70,8 @@ public class FacultyService {
 
         return RespBean.ok("查询成功", pageResponse);
     }
+
+    public RespBean allFacultyDTO() {
+        return RespBean.ok("查询成功", facultyMapper.getFacultyDTO());
+    }
 }
