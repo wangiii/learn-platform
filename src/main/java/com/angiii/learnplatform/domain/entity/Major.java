@@ -17,7 +17,7 @@ public class Major extends BaseEntity implements Serializable {
     private String name;
 
     /**
-     * 所属院系 id
+     * 所属院系
      */
-    private Long facultyId;
+    private Faculty faculty;
 }

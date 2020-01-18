@@ -45,7 +45,7 @@ public class MajorService {
     public RespBean update(Long id, Major major) {
         if (major != null
                 && major.getName() != null
-                && major.getFacultyId() != null) {
+                && major.getFaculty() != null) {
             major.setId(id);
             major.setUpdateTime(new Date());
             if (majorMapper.update(major) == 1) {
@@ -76,17 +76,13 @@ public class MajorService {
         if (majors != null) {
             List<MajorDTO> majorDTOs = new ArrayList<>();
             for (Major major: majors) {
-                if (major.getFacultyId() != null) {
-                    Faculty faculty = facultyMapper.selectFacultyById(major.getFacultyId());
-                    MajorDTO majorDTO = MajorDTO.builder().id(major.getId()).name(major.getName()).
-                            createTime(major.getCreateTime()).updateTime(major.getUpdateTime()).
-                            facultyId(major.getFacultyId()).facultyName(faculty.getName()).build();
-                    majorDTOs.add(majorDTO);
-                } else {
-                    MajorDTO majorDTO = MajorDTO.builder().id(major.getId()).name(major.getName()).
-                            createTime(major.getCreateTime()).updateTime(major.getUpdateTime()).build();
-                    majorDTOs.add(majorDTO);
+                MajorDTO majorDTO = MajorDTO.builder().id(major.getId()).name(major.getName()).
+                        createTime(major.getCreateTime()).updateTime(major.getUpdateTime()).build();
+                if (major.getFaculty() != null) {
+                    majorDTO.setFacultyId(major.getFaculty().getId());
+                    majorDTO.setFacultyName(major.getFaculty().getName());
                 }
+                majorDTOs.add(majorDTO);
             }
             pageResponse.setList(majorDTOs);
             pageResponse.setSize(majorDTOs.size());
