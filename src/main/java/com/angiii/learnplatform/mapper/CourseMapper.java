@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface CourseMapper {
 
-    @Select("select * from tb_course")
+    @Select("select * from tb_course ORDER BY id DESC")
     @Results({
             @Result(property = "classHour", column = "class_hour"),
             @Result(property = "createTime", column = "created_at"),
@@ -16,7 +16,7 @@ public interface CourseMapper {
     })
     List<Course> getAll();
 
-    @Select("select * from tb_course limit #{start}, #{amount}")
+    @Select("select * from tb_course ORDER BY id DESC limit #{start}, #{amount}")
     @Results({
             @Result(property = "classHour", column = "class_hour"),
             @Result(property = "createTime", column = "created_at"),

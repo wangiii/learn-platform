@@ -13,18 +13,14 @@ public interface FacultyMapper {
             "values(#{name}, #{createTime}, #{updateTime})")
     int insert(Faculty faculty);
 
-    @Select("select * from tb_faculty limit #{start}, #{amount}")
+    @Select("select * from tb_faculty ORDER BY id DESC limit #{start}, #{amount}")
     @Results({
             @Result(property = "createTime", column = "created_at"),
             @Result(property = "updateTime", column = "updated_at")
     })
     List<Faculty> getPage(Integer start, Integer amount);
 
-    @Select("select id, name from tb_faculty")
-    @Results({
-            @Result(property = "value", column = "id"),
-            @Result(property = "label", column = "name")
-    })
+    @Select("select id as value, name as label from tb_faculty")
     List<FacultyDTO> getFacultyDTO();
 
     @Select("select count(*) from tb_faculty ")
