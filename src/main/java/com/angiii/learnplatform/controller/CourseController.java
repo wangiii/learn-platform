@@ -39,7 +39,11 @@ public class CourseController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public RespBean updateCourse(@PathVariable(name = "id") Long id, Course course) {
+    public RespBean updateCourse(@PathVariable(name = "id") Long id, @RequestParam(value = "majorIds") String majorIds, Course course) {
+        if (!majorIds.equals("")) {
+            String[] ids = majorIds.split(",");
+            courseService.updateCourseMajors(id, ids);
+        }
         return courseService.update(id, course);
     }
 

@@ -3,6 +3,7 @@ package com.angiii.learnplatform.domain.entity;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @ToString(callSuper = true)
@@ -36,5 +37,8 @@ public class Course extends BaseEntity implements Serializable {
      */
     private Integer classHour;
 
-
+    /**
+     * 所属专业
+     */
+    private List<Major> majors;
 }

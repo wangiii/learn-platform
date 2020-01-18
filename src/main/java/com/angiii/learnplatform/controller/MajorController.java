@@ -31,6 +31,12 @@ public class MajorController {
         return majorService.all(pageRequest);
     }
 
+    @GetMapping("/dto")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public RespBean getAllMajorDTO() {
+        return majorService.getAllMajors();
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean deleteMajor(@PathVariable(name = "id") Long id) {

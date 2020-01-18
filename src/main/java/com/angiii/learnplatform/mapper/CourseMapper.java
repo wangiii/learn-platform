@@ -18,9 +18,12 @@ public interface CourseMapper {
 
     @Select("select * from tb_course ORDER BY id DESC limit #{start}, #{amount}")
     @Results({
+            @Result(property = "id", column = "id"),
             @Result(property = "classHour", column = "class_hour"),
             @Result(property = "createTime", column = "created_at"),
-            @Result(property = "updateTime", column = "updated_at")
+            @Result(property = "updateTime", column = "updated_at"),
+            @Result(property = "majors", column = "id",
+            many = @Many(select = "com.angiii.learnplatform.mapper.MajorMapper.selectMajorsByCourseId"))
     })
     List<Course> getPage(Integer start, Integer amount);
 

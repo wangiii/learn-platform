@@ -1,5 +1,7 @@
 package com.angiii.learnplatform.mapper;
 
+import com.angiii.learnplatform.domain.dto.MajorCheckBoxDTO;
+import com.angiii.learnplatform.domain.dto.MajorDTO;
 import com.angiii.learnplatform.domain.entity.Major;
 import org.apache.ibatis.annotations.*;
 
@@ -39,4 +41,18 @@ public interface MajorMapper {
             @Result(property = "faculty.name", column = "facultyName")
     })
     Major selectMajorById(Long id);
+
+    @Select("SELECT * from tb_major where id IN (select major_id from tb_major_course where course_id = #{id})")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    List<Major> selectMajorsByCourseId(Long id);
+
+    @Select("select id, name from tb_major")
+    @Results({
+            @Result(property = "value", column = "id"),
+            @Result(property = "label", column = "name")
+    })
+    List<MajorCheckBoxDTO> selectAllMajors();
 }

@@ -90,4 +90,8 @@ public class MajorService {
 
         return RespBean.ok("查询成功", pageResponse);
     }
+
+    public RespBean getAllMajors() {
+        return RespBean.ok("查询成功", majorMapper.selectAllMajors());
+    }
 }

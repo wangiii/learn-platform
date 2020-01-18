@@ -5,6 +5,7 @@ import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.entity.Course;
 import com.angiii.learnplatform.domain.dto.RespBean;
+import com.angiii.learnplatform.mapper.MajorCourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class CourseService {
 
     @Autowired
     private CourseMapper courseMapper;
+
+    @Autowired
+    private MajorCourseMapper majorCourseMapper;
 
     public RespBean all(PageRequest pageRequest) {
         int pageNum = 1;
@@ -81,5 +85,14 @@ public class CourseService {
             }
         }
         return RespBean.error("更新失败");
+    }
+
+    public void updateCourseMajors(long courseId, String[] MajorIds) {
+        majorCourseMapper.delete(courseId);
+        for (String majorId : MajorIds) {
+            if (!majorId.equals("[object Object]")) {
+                majorCourseMapper.insert(courseId, majorId);
+            }
+        }
     }
 }
