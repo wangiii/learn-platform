@@ -1,5 +1,6 @@
 package com.angiii.learnplatform.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class Student extends BaseEntity implements Serializable {
     /**
      * 学生密码
      */
+    @JsonIgnore
     private String password;
 
     /**
