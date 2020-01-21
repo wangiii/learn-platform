@@ -33,9 +33,9 @@ public class StudentService {
         Integer pages = total / pageSize + 1;
         PageResponse pageResponse = PageResponse.builder().
                 pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-        List<Student> courses = studentMapper.getPage(start, amount);
-        pageResponse.setList(courses);
-        pageResponse.setSize(courses.size());
+        List<Student> students = studentMapper.getPage(start, amount);
+        pageResponse.setList(students);
+        pageResponse.setSize(students.size());
 
         return RespBean.ok("查询成功", pageResponse);
     }

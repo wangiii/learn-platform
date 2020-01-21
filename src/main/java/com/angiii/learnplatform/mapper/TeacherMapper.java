@@ -25,4 +25,22 @@ public interface TeacherMapper {
             @Result(property = "updateTime", column = "updated_at")
     })
     Teacher selectTeacherByPhone(@Param("phone") String phone);
+
+    @Select("select * from tb_teacher ORDER BY id DESC limit #{start}, #{amount}")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at"),
+    })
+    List<Teacher> getPage(Integer start, Integer amount);
+
+    @Select("select count(*) from tb_teacher ")
+    Integer getAllCount();
+
+    @Update("update tb_teacher set " +
+            "name = #{name}, password = #{password}, updated_at = #{updateTime} " +
+            "where phone = #{phone}")
+    int update(Teacher teacher);
+
+    @Delete("delete from tb_teacher where phone = #{phone}")
+    int delete(String phone);
 }
