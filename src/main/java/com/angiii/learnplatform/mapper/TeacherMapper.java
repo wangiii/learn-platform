@@ -19,17 +19,19 @@ public interface TeacherMapper {
             "values(#{name}, #{phone}, #{password}, #{createTime}, #{updateTime})")
     int insert(Teacher teacher);
 
-    @Select("select * from tb_teacher where phone = #{phone} limit 1")
+    @Select("select t.id as id, t.name as name, t.phone as phone, f.id as facultyId, f.name as facultyName, t.updated_at as updateTime, t.created_at as createTime " +
+            "from tb_teacher t left join tb_faculty f on t.faculty_id = f.id where phone = #{phone} limit 1")
     @Results({
-            @Result(property = "createTime", column = "created_at"),
-            @Result(property = "updateTime", column = "updated_at")
+            @Result(property = "faculty.id", column = "facultyId"),
+            @Result(property = "faculty.name", column = "facultyName")
     })
     Teacher selectTeacherByPhone(@Param("phone") String phone);
 
-    @Select("select * from tb_teacher ORDER BY id DESC limit #{start}, #{amount}")
+    @Select("select t.id as id, t.name as name, t.phone as phone, f.id as facultyId, f.name as facultyName, t.updated_at as updateTime, t.created_at as createTime " +
+            "from tb_teacher t left join tb_faculty f on t.faculty_id = f.id ORDER BY id DESC limit #{start}, #{amount}")
     @Results({
-            @Result(property = "createTime", column = "created_at"),
-            @Result(property = "updateTime", column = "updated_at"),
+            @Result(property = "faculty.id", column = "facultyId"),
+            @Result(property = "faculty.name", column = "facultyName")
     })
     List<Teacher> getPage(Integer start, Integer amount);
 
@@ -37,7 +39,7 @@ public interface TeacherMapper {
     Integer getAllCount();
 
     @Update("update tb_teacher set " +
-            "name = #{name}, password = #{password}, updated_at = #{updateTime} " +
+            "name = #{name}, faculty_id = #{faculty.id}, updated_at = #{updateTime} " +
             "where phone = #{phone}")
     int update(Teacher teacher);
 

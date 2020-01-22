@@ -2,16 +2,20 @@ package com.angiii.learnplatform.service;
 
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
+import com.angiii.learnplatform.domain.dto.TeacherDTO;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.domain.entity.Teacher;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class TeacherService {
 
     @Autowired
@@ -43,8 +47,20 @@ public class TeacherService {
         PageResponse pageResponse = PageResponse.builder().
                 pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
         List<Teacher> teachers = teacherMapper.getPage(start, amount);
-        pageResponse.setList(teachers);
-        pageResponse.setSize(teachers.size());
+        if (teachers != null) {
+            List<TeacherDTO> teacherDTOS = new ArrayList<>();
+            for (Teacher teacher: teachers) {
+                TeacherDTO teacherDTO = TeacherDTO.builder().id(teacher.getId()).name(teacher.getName()).phone(teacher.getPhone()).
+                        createTime(teacher.getCreateTime()).updateTime(teacher.getUpdateTime()).build();
+                if (teacher.getFaculty() != null) {
+                    teacherDTO.setFacultyId(teacher.getFaculty().getId());
+                    teacherDTO.setFacultyName(teacher.getFaculty().getName());
+                }
+                teacherDTOS.add(teacherDTO);
+            }
+            pageResponse.setList(teacherDTOS);
+            pageResponse.setSize(teacherDTOS.size());
+        }
 
         return RespBean.ok("查询成功", pageResponse);
     }
@@ -60,7 +76,7 @@ public class TeacherService {
     public RespBean update(String phone, Teacher teacher) {
         if (teacher != null
                 && teacher.getName() != null
-                && teacher.getPassword() != null) {
+                && teacher.getFaculty() != null) {
             teacher.setPhone(phone);
             teacher.setUpdateTime(new Date());
             if (teacherMapper.update(teacher) == 1) {
