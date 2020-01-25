@@ -3,6 +3,7 @@ package com.angiii.learnplatform.controller;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.domain.entity.Teacher;
+import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class TeacherController {
 
     @Autowired
     TeacherService teacherService;
+
+    @Autowired
+    TeacherMapper teacherMapper;
 
     @GetMapping("/")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
@@ -33,7 +37,12 @@ public class TeacherController {
 
     @PutMapping("/{phone}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public RespBean updateTeacher(@PathVariable(name = "phone") String phone, Teacher teacher) {
+    public RespBean updateTeacher(@PathVariable(name = "phone") String phone, @RequestParam(value = "majorIds") String majorIds, Teacher teacher) {
+        if (!majorIds.equals("")) {
+            String[] ids = majorIds.split(",");
+            long id = teacherMapper.getIdByPhone(phone);
+            teacherService.updateTeacherMajors(id, ids);
+        }
         return teacherService.update(phone, teacher);
     }
 

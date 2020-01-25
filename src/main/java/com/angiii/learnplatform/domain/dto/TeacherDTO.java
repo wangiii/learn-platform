@@ -1,9 +1,11 @@
 package com.angiii.learnplatform.domain.dto;
 
+import com.angiii.learnplatform.domain.entity.Major;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @ToString()
@@ -23,4 +25,6 @@ public class TeacherDTO {
 
     private Long facultyId;
     private String facultyName;
+
+    private List<Major> majors;
 }

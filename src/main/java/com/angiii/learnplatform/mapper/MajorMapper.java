@@ -49,6 +49,13 @@ public interface MajorMapper {
     })
     List<Major> selectMajorsByCourseId(Long id);
 
+    @Select("SELECT * from tb_major where id IN (select major_id from tb_teacher_major where teacher_id = #{id})")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    List<Major> selectMajorsByTeacherId(Long id);
+
     @Select("select id, name from tb_major")
     @Results({
             @Result(property = "value", column = "id"),

@@ -3,6 +3,8 @@ package com.angiii.learnplatform.service;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.dto.TeacherDTO;
+import com.angiii.learnplatform.domain.entity.Major;
+import com.angiii.learnplatform.mapper.TeacherMajorMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.domain.entity.Teacher;
@@ -20,6 +22,9 @@ public class TeacherService {
 
     @Autowired
     TeacherMapper teacherMapper;
+
+    @Autowired
+    TeacherMajorMapper teacherMajorMapper;
 
     public RespBean save(Teacher teacher) {
         teacher.setCreateTime(new Date());
@@ -49,12 +54,15 @@ public class TeacherService {
         List<Teacher> teachers = teacherMapper.getPage(start, amount);
         if (teachers != null) {
             List<TeacherDTO> teacherDTOS = new ArrayList<>();
-            for (Teacher teacher: teachers) {
+            for (Teacher teacher : teachers) {
                 TeacherDTO teacherDTO = TeacherDTO.builder().id(teacher.getId()).name(teacher.getName()).phone(teacher.getPhone()).
                         createTime(teacher.getCreateTime()).updateTime(teacher.getUpdateTime()).build();
                 if (teacher.getFaculty() != null) {
                     teacherDTO.setFacultyId(teacher.getFaculty().getId());
                     teacherDTO.setFacultyName(teacher.getFaculty().getName());
+                }
+                if (teacher.getMajors() != null) {
+                    teacherDTO.setMajors(teacher.getMajors());
                 }
                 teacherDTOS.add(teacherDTO);
             }
@@ -92,5 +100,14 @@ public class TeacherService {
             return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败");
+    }
+
+    public void updateTeacherMajors(long teacherId, String[] MajorIds) {
+        teacherMajorMapper.delete(teacherId);
+        for (String majorId : MajorIds) {
+            if (!majorId.equals("[object Object]")) {
+                teacherMajorMapper.insert(teacherId, majorId);
+            }
+        }
     }
 }
