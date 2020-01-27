@@ -15,8 +15,8 @@ public interface TeacherMapper {
     })
     List<Teacher> getAll();
 
-    @Insert("insert into tb_teacher(name, phone, password, created_at, updated_at) " +
-            "values(#{name}, #{phone}, #{password}, #{createTime}, #{updateTime})")
+    @Insert("insert into tb_teacher(name, phone, password, faculty_id, created_at, updated_at) " +
+            "values(#{name}, #{phone}, #{password}, #{faculty.id}, #{createTime}, #{updateTime})")
     int insert(Teacher teacher);
 
     @Select("select t.id as id, t.name as name, t.phone as phone, f.id as facultyId, f.name as facultyName, t.updated_at as updateTime, t.created_at as createTime " +
