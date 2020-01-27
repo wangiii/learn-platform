@@ -6,13 +6,17 @@ import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.entity.Course;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.mapper.MajorCourseMapper;
+import com.angiii.learnplatform.mapper.StudentCourseMapper;
+import com.angiii.learnplatform.mapper.TeacherCourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class CourseService {
 
     @Autowired
@@ -20,6 +24,12 @@ public class CourseService {
 
     @Autowired
     private MajorCourseMapper majorCourseMapper;
+
+    @Autowired
+    private StudentCourseMapper studentCourseMapper;
+
+    @Autowired
+    private TeacherCourseMapper teacherCourseMapper;
 
     public RespBean all(PageRequest pageRequest) {
         int pageNum = 1;
@@ -52,7 +62,7 @@ public class CourseService {
                 return RespBean.ok("添加成功", course);
             }
         }
-        return RespBean.error("添加失败");
+        throw new IllegalArgumentException("添加失败");
     }
 
     public RespBean find(Long id) {
@@ -64,10 +74,14 @@ public class CourseService {
     }
 
     public RespBean delete(Long id) {
+        Course course = courseMapper.selectCourseById(id);
+        majorCourseMapper.delete(course.getId());
+        studentCourseMapper.deleteByCourse(course.getId());
+        teacherCourseMapper.deleteByCourse(course.getId());
         if (courseMapper.delete(id) == 1) {
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败");
+        throw new IllegalArgumentException("删除失败");
     }
 
     public RespBean update(Long id, Course course) {
@@ -84,7 +98,7 @@ public class CourseService {
                 return RespBean.ok("更新成功", RealCourse);
             }
         }
-        return RespBean.error("更新失败");
+        throw new IllegalArgumentException("更新失败");
     }
 
     public void updateCourseMajors(long courseId, String[] MajorIds) {

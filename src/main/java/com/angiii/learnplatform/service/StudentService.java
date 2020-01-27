@@ -5,19 +5,25 @@ import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.domain.dto.StudentDTO;
 import com.angiii.learnplatform.domain.entity.Student;
+import com.angiii.learnplatform.mapper.StudentCourseMapper;
 import com.angiii.learnplatform.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class StudentService {
 
     @Autowired
-    StudentMapper studentMapper;
+    private StudentMapper studentMapper;
+
+    @Autowired
+    private StudentCourseMapper studentCourseMapper;
 
     public RespBean all(PageRequest pageRequest) {
         int pageNum = 1;
@@ -66,7 +72,7 @@ public class StudentService {
                 return RespBean.ok("添加成功", student);
             }
         }
-        return RespBean.error("添加失败");
+        throw new IllegalArgumentException("添加失败");
     }
 
     public RespBean find(String phone) {
@@ -88,13 +94,15 @@ public class StudentService {
                 return RespBean.ok("更新成功", RealStudent);
             }
         }
-        return RespBean.error("更新失败");
+        throw new IllegalArgumentException("更新失败");
     }
 
     public RespBean delete(String phone) {
+        Student student = studentMapper.selectStudentByPhone(phone);
+        studentCourseMapper.delete(student.getId());
         if (studentMapper.delete(phone) == 1) {
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败");
+        throw new IllegalArgumentException("删除失败");
     }
 }

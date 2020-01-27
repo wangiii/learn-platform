@@ -32,6 +32,11 @@ public class GlobalExceptionHandler {
         return RespBean.error(403, "你没有权限访问");
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public RespBean illegalArgumentException(IllegalArgumentException e) {
+        log.error("操作异常", e);
+        return RespBean.error("操作异常!");
+    }
 
     @ExceptionHandler(Exception.class)
     public RespBean exception(Exception e) {

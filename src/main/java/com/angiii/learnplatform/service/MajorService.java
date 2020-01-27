@@ -4,25 +4,34 @@ import com.angiii.learnplatform.domain.dto.MajorDTO;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.dto.RespBean;
-import com.angiii.learnplatform.domain.entity.Faculty;
 import com.angiii.learnplatform.domain.entity.Major;
 import com.angiii.learnplatform.mapper.FacultyMapper;
+import com.angiii.learnplatform.mapper.MajorCourseMapper;
 import com.angiii.learnplatform.mapper.MajorMapper;
+import com.angiii.learnplatform.mapper.TeacherMajorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class MajorService {
 
     @Autowired
-    MajorMapper majorMapper;
+    private MajorMapper majorMapper;
 
     @Autowired
-    FacultyMapper facultyMapper;
+    private FacultyMapper facultyMapper;
+
+    @Autowired
+    private MajorCourseMapper majorCourseMapper;
+
+    @Autowired
+    private TeacherMajorMapper teacherMajorMapper;
 
     public RespBean save(Major major) {
         if (major != null && major.getName() != null) {
@@ -32,14 +41,16 @@ public class MajorService {
                 return RespBean.ok("添加成功", major);
             }
         }
-        return RespBean.error("添加失败");
+        throw new IllegalArgumentException("添加失败");
     }
 
     public RespBean delete(Long id) {
+        majorCourseMapper.deleteByMajorId(id);
+        teacherMajorMapper.deleteByMajorId(id);
         if (majorMapper.delete(id) == 1) {
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败");
+        throw new IllegalArgumentException("删除失败");
     }
 
     public RespBean update(Long id, Major major) {
@@ -53,7 +64,7 @@ public class MajorService {
                 return RespBean.ok("更新成功", RealFaculty);
             }
         }
-        return RespBean.error("更新失败");
+        throw new IllegalArgumentException("更新失败");
     }
 
     public RespBean all(PageRequest pageRequest) {

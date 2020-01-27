@@ -7,11 +7,13 @@ import com.angiii.learnplatform.domain.entity.Faculty;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class FacultyService {
 
     @Autowired
@@ -25,14 +27,14 @@ public class FacultyService {
                 return RespBean.ok("添加成功", faculty);
             }
         }
-        return RespBean.error("添加失败");
+        throw new IllegalArgumentException("添加失败");
     }
 
     public RespBean delete(Long id) {
         if (facultyMapper.delete(id) == 1) {
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败");
+        throw new IllegalArgumentException("删除失败");
     }
 
     public RespBean update(Long id, Faculty faculty) {
@@ -45,7 +47,7 @@ public class FacultyService {
                 return RespBean.ok("更新成功", RealFaculty);
             }
         }
-        return RespBean.error("更新失败");
+        throw new IllegalArgumentException("更新失败");
     }
 
     public RespBean all(PageRequest pageRequest) {

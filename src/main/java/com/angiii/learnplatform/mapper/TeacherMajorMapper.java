@@ -10,6 +10,9 @@ public interface TeacherMajorMapper {
     @Delete("delete from tb_teacher_major where teacher_id = #{teacherId}")
     int delete(long teacherId);
 
+    @Delete("delete from tb_teacher_major where major_id = #{majorId}")
+    int deleteByMajorId(long majorId);
+
     @Insert("insert into tb_teacher_major(teacher_id, major_id) " +
             "values(#{teacherId}, #{majorId})")
     int insert(long teacherId, String majorId);

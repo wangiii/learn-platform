@@ -3,7 +3,7 @@ package com.angiii.learnplatform.service;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.dto.TeacherDTO;
-import com.angiii.learnplatform.domain.entity.Major;
+import com.angiii.learnplatform.mapper.TeacherCourseMapper;
 import com.angiii.learnplatform.mapper.TeacherMajorMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.domain.dto.RespBean;
@@ -11,6 +11,7 @@ import com.angiii.learnplatform.domain.entity.Teacher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,13 +19,17 @@ import java.util.List;
 
 @Service
 @Slf4j
+@Transactional
 public class TeacherService {
 
     @Autowired
-    TeacherMapper teacherMapper;
+    private TeacherMapper teacherMapper;
 
     @Autowired
-    TeacherMajorMapper teacherMajorMapper;
+    private TeacherMajorMapper teacherMajorMapper;
+
+    @Autowired
+    private TeacherCourseMapper teacherCourseMapper;
 
     public RespBean save(Teacher teacher) {
         teacher.setCreateTime(new Date());
@@ -32,7 +37,7 @@ public class TeacherService {
         if (teacherMapper.insert(teacher) == 1) {
             return RespBean.ok("添加成功", teacher);
         }
-        return RespBean.error("添加失败");
+        throw new IllegalArgumentException("添加失败");
     }
 
     public RespBean all(PageRequest pageRequest) {
@@ -92,14 +97,17 @@ public class TeacherService {
                 return RespBean.ok("更新成功", RealTeacher);
             }
         }
-        return RespBean.error("更新失败");
+        throw new IllegalArgumentException("更新失败");
     }
 
     public RespBean delete(String phone) {
+        Teacher teacher = teacherMapper.selectTeacherByPhone(phone);
+        teacherMajorMapper.delete(teacher.getId());
+        teacherCourseMapper.delete(teacher.getId());
         if (teacherMapper.delete(phone) == 1) {
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败");
+        throw new IllegalArgumentException("删除失败");
     }
 
     public void updateTeacherMajors(long teacherId, String[] MajorIds) {
