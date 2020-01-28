@@ -25,6 +25,13 @@ public class StudentController {
         return studentService.all(pageRequest);
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public RespBean getSearchTeacher(PageRequest pageRequest, String phone) {
+        log.info("searchPhone{}", phone);
+        return studentService.search(pageRequest, phone);
+    }
+
     @DeleteMapping("/{phone}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean deleteStudent(@PathVariable(name = "phone") String phone) {
