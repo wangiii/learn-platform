@@ -29,6 +29,13 @@ public class TeacherController {
         return teacherService.all(pageRequest);
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public RespBean getSearchTeacher(PageRequest pageRequest, String phone) {
+        log.info("searchPhone{}", phone);
+        return teacherService.search(pageRequest, phone);
+    }
+
     @PostMapping("/")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean addTeacher(Teacher teacher) {

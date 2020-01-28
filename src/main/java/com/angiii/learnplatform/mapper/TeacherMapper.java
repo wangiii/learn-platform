@@ -38,6 +38,19 @@ public interface TeacherMapper {
     })
     List<Teacher> getPage(Integer start, Integer amount);
 
+    @Select("select t.id as id, t.name as name, t.phone as phone, f.id as facultyId, f.name as facultyName, t.updated_at as updateTime, t.created_at as createTime " +
+            "from tb_teacher t left join tb_faculty f on t.faculty_id = f.id " +
+            "where t.phone like CONCAT(#{phone},'%') " +
+            "ORDER BY id DESC limit #{start}, #{amount}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "faculty.id", column = "facultyId"),
+            @Result(property = "faculty.name", column = "facultyName"),
+            @Result(property = "majors", column = "id",
+                    many = @Many(select = "com.angiii.learnplatform.mapper.MajorMapper.selectMajorsByTeacherId"))
+    })
+    List<Teacher> getSearch(Integer start, Integer amount, String phone);
+
     @Select("select count(*) from tb_teacher ")
     Integer getAllCount();
 

@@ -118,4 +118,42 @@ public class TeacherService {
             }
         }
     }
+
+    public RespBean search(PageRequest pageRequest, String phone) {
+        int pageNum = 1;
+        int pageSize = 5;
+        if (pageRequest != null
+                && pageRequest.getPageSize() > 0
+                && pageRequest.getPageNum() > 0) {
+            pageNum = pageRequest.getPageNum();
+            pageSize = pageRequest.getPageSize();
+        }
+
+        Integer start = (pageNum - 1) * pageSize;
+        Integer amount = pageSize;
+        Integer total = teacherMapper.getAllCount();
+        Integer pages = total / pageSize + 1;
+        PageResponse pageResponse = PageResponse.builder().
+                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
+        List<Teacher> teachers = teacherMapper.getSearch(start, amount, phone);
+        if (teachers != null) {
+            List<TeacherDTO> teacherDTOS = new ArrayList<>();
+            for (Teacher teacher : teachers) {
+                TeacherDTO teacherDTO = TeacherDTO.builder().id(teacher.getId()).name(teacher.getName()).phone(teacher.getPhone()).
+                        createTime(teacher.getCreateTime()).updateTime(teacher.getUpdateTime()).build();
+                if (teacher.getFaculty() != null) {
+                    teacherDTO.setFacultyId(teacher.getFaculty().getId());
+                    teacherDTO.setFacultyName(teacher.getFaculty().getName());
+                }
+                if (teacher.getMajors() != null) {
+                    teacherDTO.setMajors(teacher.getMajors());
+                }
+                teacherDTOS.add(teacherDTO);
+            }
+            pageResponse.setList(teacherDTOS);
+            pageResponse.setSize(teacherDTOS.size());
+        }
+
+        return RespBean.ok("查询成功", pageResponse);
+    }
 }
