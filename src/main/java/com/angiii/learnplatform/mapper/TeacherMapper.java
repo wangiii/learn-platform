@@ -27,6 +27,13 @@ public interface TeacherMapper {
     })
     Teacher selectTeacherByPhone(@Param("phone") String phone);
 
+    @Select("select * from tb_teacher where phone = #{phone} limit 1")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    Teacher selectTeacherByPhoneForLoad(@Param("phone") String phone);
+
     @Select("select t.id as id, t.name as name, t.phone as phone, f.id as facultyId, f.name as facultyName, t.updated_at as updateTime, t.created_at as createTime " +
             "from tb_teacher t left join tb_faculty f on t.faculty_id = f.id ORDER BY id DESC limit #{start}, #{amount}")
     @Results({

@@ -27,7 +27,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        Teacher teacher = teacherMapper.selectTeacherByPhone(s);
+        Teacher teacher = teacherMapper.selectTeacherByPhoneForLoad(s);
         if (teacher != null) {
             SimpleGrantedAuthority teacherAuthority = new SimpleGrantedAuthority("ROLE_TEACHER");
             ArrayList<GrantedAuthority> authorities = new ArrayList<>();
