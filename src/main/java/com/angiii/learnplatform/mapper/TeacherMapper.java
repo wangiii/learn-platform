@@ -54,6 +54,9 @@ public interface TeacherMapper {
     @Select("select count(*) from tb_teacher ")
     Integer getAllCount();
 
+    @Select("select count(*) from tb_teacher where phone like CONCAT(#{phone},'%') ")
+    Integer getSearchCount(String phone);
+
     @Update("update tb_teacher set " +
             "name = #{name}, faculty_id = #{faculty.id}, updated_at = #{updateTime} " +
             "where phone = #{phone}")

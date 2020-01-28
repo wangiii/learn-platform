@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -120,6 +122,11 @@ public class TeacherService {
     }
 
     public RespBean search(PageRequest pageRequest, String phone) {
+        Pattern pattern = Pattern.compile("[0-9]+");
+        Matcher isNum = pattern.matcher(phone);
+        if (!isNum.matches()) {
+            throw new IllegalArgumentException("手机号有误");
+        }
         int pageNum = 1;
         int pageSize = 5;
         if (pageRequest != null
@@ -131,7 +138,7 @@ public class TeacherService {
 
         Integer start = (pageNum - 1) * pageSize;
         Integer amount = pageSize;
-        Integer total = teacherMapper.getAllCount();
+        Integer total = teacherMapper.getSearchCount(phone);
         Integer pages = total / pageSize + 1;
         PageResponse pageResponse = PageResponse.builder().
                 pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
