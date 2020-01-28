@@ -3,7 +3,6 @@ package com.angiii.learnplatform.service;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.dto.TeacherDTO;
-import com.angiii.learnplatform.mapper.TeacherCourseMapper;
 import com.angiii.learnplatform.mapper.TeacherMajorMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.domain.dto.RespBean;
@@ -29,9 +28,6 @@ public class TeacherService {
 
     @Autowired
     private TeacherMajorMapper teacherMajorMapper;
-
-    @Autowired
-    private TeacherCourseMapper teacherCourseMapper;
 
     public RespBean save(Teacher teacher) {
         teacher.setCreateTime(new Date());
@@ -103,9 +99,6 @@ public class TeacherService {
     }
 
     public RespBean delete(String phone) {
-        Teacher teacher = teacherMapper.selectTeacherByPhone(phone);
-        teacherMajorMapper.delete(teacher.getId());
-        teacherCourseMapper.delete(teacher.getId());
         if (teacherMapper.delete(phone) == 1) {
             return RespBean.ok("删除成功");
         }

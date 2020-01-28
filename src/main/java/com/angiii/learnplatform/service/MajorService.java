@@ -5,10 +5,7 @@ import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.domain.entity.Major;
-import com.angiii.learnplatform.mapper.FacultyMapper;
-import com.angiii.learnplatform.mapper.MajorCourseMapper;
 import com.angiii.learnplatform.mapper.MajorMapper;
-import com.angiii.learnplatform.mapper.TeacherMajorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,15 +21,6 @@ public class MajorService {
     @Autowired
     private MajorMapper majorMapper;
 
-    @Autowired
-    private FacultyMapper facultyMapper;
-
-    @Autowired
-    private MajorCourseMapper majorCourseMapper;
-
-    @Autowired
-    private TeacherMajorMapper teacherMajorMapper;
-
     public RespBean save(Major major) {
         if (major != null && major.getName() != null) {
             major.setUpdateTime(new Date());
@@ -45,8 +33,6 @@ public class MajorService {
     }
 
     public RespBean delete(Long id) {
-        majorCourseMapper.deleteByMajorId(id);
-        teacherMajorMapper.deleteByMajorId(id);
         if (majorMapper.delete(id) == 1) {
             return RespBean.ok("删除成功");
         }

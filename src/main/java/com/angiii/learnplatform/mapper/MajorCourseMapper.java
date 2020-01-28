@@ -10,9 +10,6 @@ public interface MajorCourseMapper {
     @Delete("delete from tb_major_course where course_id = #{courseId}")
     int delete(long courseId);
 
-    @Delete("delete from tb_major_course where major_id = #{majorId}")
-    int deleteByMajorId(long majorId);
-
     @Insert("insert into tb_major_course(course_id, major_id) " +
             "values(#{courseId}, #{majorId})")
     int insert(long courseId, String majorId);

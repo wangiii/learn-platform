@@ -5,7 +5,6 @@ import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.domain.dto.StudentDTO;
 import com.angiii.learnplatform.domain.entity.Student;
-import com.angiii.learnplatform.mapper.StudentCourseMapper;
 import com.angiii.learnplatform.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,6 @@ public class StudentService {
 
     @Autowired
     private StudentMapper studentMapper;
-
-    @Autowired
-    private StudentCourseMapper studentCourseMapper;
 
     public RespBean all(PageRequest pageRequest) {
         int pageNum = 1;
@@ -144,8 +140,6 @@ public class StudentService {
     }
 
     public RespBean delete(String phone) {
-        Student student = studentMapper.selectStudentByPhone(phone);
-        studentCourseMapper.delete(student.getId());
         if (studentMapper.delete(phone) == 1) {
             return RespBean.ok("删除成功");
         }

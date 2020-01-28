@@ -10,9 +10,6 @@ public interface TeacherCourseMapper {
     @Delete("delete from tb_teacher_course where teacher_id = #{teacherId}")
     int delete(long teacherId);
 
-    @Delete("delete from tb_teacher_course where course_id = #{courseId}")
-    int deleteByCourse(long courseId);
-
     @Insert("insert into tb_teacher_course(course_id, teacher_id) " +
             "values(#{courseId}, #{teacherId})")
     int insert(long teacherId, String courseId);

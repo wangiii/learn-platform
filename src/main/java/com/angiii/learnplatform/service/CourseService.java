@@ -6,8 +6,6 @@ import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.entity.Course;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.mapper.MajorCourseMapper;
-import com.angiii.learnplatform.mapper.StudentCourseMapper;
-import com.angiii.learnplatform.mapper.TeacherCourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +22,6 @@ public class CourseService {
 
     @Autowired
     private MajorCourseMapper majorCourseMapper;
-
-    @Autowired
-    private StudentCourseMapper studentCourseMapper;
-
-    @Autowired
-    private TeacherCourseMapper teacherCourseMapper;
 
     public RespBean all(PageRequest pageRequest) {
         int pageNum = 1;
@@ -74,10 +66,6 @@ public class CourseService {
     }
 
     public RespBean delete(Long id) {
-        Course course = courseMapper.selectCourseById(id);
-        majorCourseMapper.delete(course.getId());
-        studentCourseMapper.deleteByCourse(course.getId());
-        teacherCourseMapper.deleteByCourse(course.getId());
         if (courseMapper.delete(id) == 1) {
             return RespBean.ok("删除成功");
         }
