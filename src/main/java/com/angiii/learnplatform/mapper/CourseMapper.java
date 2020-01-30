@@ -1,5 +1,6 @@
 package com.angiii.learnplatform.mapper;
 
+import com.angiii.learnplatform.domain.dto.CourseDTO;
 import com.angiii.learnplatform.domain.entity.Course;
 import org.apache.ibatis.annotations.*;
 
@@ -8,13 +9,8 @@ import java.util.List;
 @Mapper
 public interface CourseMapper {
 
-    @Select("select * from tb_course ORDER BY id DESC")
-    @Results({
-            @Result(property = "classHour", column = "class_hour"),
-            @Result(property = "createTime", column = "created_at"),
-            @Result(property = "updateTime", column = "updated_at")
-    })
-    List<Course> getAll();
+    @Select("select id as value, name as label from tb_course ORDER BY id DESC")
+    List<CourseDTO> getAllDto();
 
     @Select("select * from tb_course ORDER BY id DESC limit #{start}, #{amount}")
     @Results({

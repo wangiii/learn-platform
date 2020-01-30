@@ -1,5 +1,6 @@
 package com.angiii.learnplatform.service;
 
+import com.angiii.learnplatform.domain.dto.CourseDTO;
 import com.angiii.learnplatform.mapper.CourseMapper;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
@@ -44,6 +45,10 @@ public class CourseService {
         pageResponse.setSize(courses.size());
 
         return RespBean.ok("查询成功", pageResponse);
+    }
+
+    public RespBean allDto() {
+        return RespBean.ok("查询成功", courseMapper.getAllDto());
     }
 
     public RespBean save(Course course) {

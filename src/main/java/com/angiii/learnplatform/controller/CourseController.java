@@ -25,6 +25,12 @@ public class CourseController {
         return courseService.all(pageRequest);
     }
 
+    @GetMapping("/dto")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')")
+    public RespBean getAllCourse() {
+        return courseService.allDto();
+    }
+
     @PostMapping("/")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean addCourse(Course course) {

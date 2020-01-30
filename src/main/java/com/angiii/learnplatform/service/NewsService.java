@@ -7,16 +7,13 @@ import com.angiii.learnplatform.domain.entity.News;
 import com.angiii.learnplatform.domain.entity.Teacher;
 import com.angiii.learnplatform.mapper.NewsMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
+import com.angiii.learnplatform.util.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -28,25 +25,17 @@ public class NewsService {
     @Autowired
     TeacherMapper teacherMapper;
 
-    private Set<String> getRoles() {
-        return AuthorityUtils.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-    }
-
-    private UserDetails getUserDetails() {
-        return (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
-
     public RespBean save(News news) {
         if (news != null && news.getName() != null) {
             news.setUpdateTime(new Date());
             news.setCreateTime(new Date());
-            if (getRoles().contains("ROLE_ADMIN")) {
+            if (AuthUtil.getRoles().contains("ROLE_ADMIN")) {
                 if (newsMapper.insert(news) == 1) {
                     return RespBean.ok("添加成功", news);
                 }
             }
-            if (getRoles().contains("ROLE_TEACHER")) {
-                Teacher teacher = teacherMapper.selectTeacherByPhone(getUserDetails().getUsername());
+            if (AuthUtil.getRoles().contains("ROLE_TEACHER")) {
+                Teacher teacher = teacherMapper.selectTeacherByPhone(AuthUtil.getAuthPhone());
                 if (teacher == null) {
                     throw new IllegalArgumentException("教师手机有误");
                 }
@@ -71,14 +60,14 @@ public class NewsService {
                 && news.getName() != null) {
             news.setId(id);
             news.setUpdateTime(new Date());
-            if (getRoles().contains("ROLE_ADMIN")) {
+            if (AuthUtil.getRoles().contains("ROLE_ADMIN")) {
                 if (newsMapper.update(news) == 1) {
                     News realNews = newsMapper.selectNewsById(news.getId());
                     return RespBean.ok("更新成功", realNews);
                 }
             }
-            if (getRoles().contains("ROLE_TEACHER")) {
-                Teacher teacher = teacherMapper.selectTeacherByPhone(getUserDetails().getUsername());
+            if (AuthUtil.getRoles().contains("ROLE_TEACHER")) {
+                Teacher teacher = teacherMapper.selectTeacherByPhone(AuthUtil.getAuthPhone());
                 if (teacher == null) {
                     throw new IllegalArgumentException("教师手机有误");
                 }
@@ -103,7 +92,7 @@ public class NewsService {
         }
         Integer start = (pageNum - 1) * pageSize;
         Integer amount = pageSize;
-        if (getRoles().contains("ROLE_ADMIN")) {
+        if (AuthUtil.getRoles().contains("ROLE_ADMIN")) {
             Integer total = newsMapper.getAllCount();
             Integer pages = total / pageSize + 1;
             PageResponse pageResponse = PageResponse.builder().
@@ -114,8 +103,8 @@ public class NewsService {
 
             return RespBean.ok("查询成功", pageResponse);
         }
-        if (getRoles().contains("ROLE_TEACHER")) {
-            Teacher teacher = teacherMapper.selectTeacherByPhone(getUserDetails().getUsername());
+        if (AuthUtil.getRoles().contains("ROLE_TEACHER")) {
+            Teacher teacher = teacherMapper.selectTeacherByPhone(AuthUtil.getAuthPhone());
             if (teacher == null) {
                 throw new IllegalArgumentException("教师手机有误");
             }

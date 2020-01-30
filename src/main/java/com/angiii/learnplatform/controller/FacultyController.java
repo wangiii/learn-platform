@@ -32,7 +32,7 @@ public class FacultyController {
     }
 
     @GetMapping("/dto")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')")
     public RespBean getAllFacultyDTO() {
         return facultyService.allFacultyDTO();
     }
