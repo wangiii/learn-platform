@@ -44,11 +44,18 @@ public class TeacherController {
 
     @PutMapping("/{phone}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public RespBean updateTeacher(@PathVariable(name = "phone") String phone, @RequestParam(value = "majorIds") String majorIds, Teacher teacher) {
-        if (!majorIds.equals("")) {
+    public RespBean updateTeacher(@PathVariable(name = "phone") String phone, @RequestParam(value = "majorIds") String majorIds, @RequestParam(value = "courseIds") String courseIds, Teacher teacher) {
+        if (!majorIds.equals("") && !majorIds.equals("[object Object]")) {
+            log.info("majorIds:{}",majorIds);
             String[] ids = majorIds.split(",");
             long id = teacherMapper.getIdByPhone(phone);
             teacherService.updateTeacherMajors(id, ids);
+        }
+        if (!courseIds.equals("") && !courseIds.equals("[object Object]")) {
+            log.info("courseIds:{}",courseIds);
+            String[] ids = courseIds.split(",");
+            long id = teacherMapper.getIdByPhone(phone);
+            teacherService.updateTeacherCourses(id, ids);
         }
         return teacherService.update(phone, teacher);
     }

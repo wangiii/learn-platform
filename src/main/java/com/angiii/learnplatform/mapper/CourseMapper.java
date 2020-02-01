@@ -14,6 +14,9 @@ public interface CourseMapper {
             "where id in (select course_id from tb_teacher_course where teacher_id = #{id})")
     List<CourseDTO> getAllDto(Teacher teacher);
 
+    @Select("select id as value, name as label from tb_course ")
+    List<CourseDTO> getAllDtoForAdmin();
+
     @Select("select * from tb_course ORDER BY id DESC limit #{start}, #{amount}")
     @Results({
             @Result(property = "id", column = "id"),
@@ -47,4 +50,11 @@ public interface CourseMapper {
             "name = #{name}, cover = #{cover}, credit = #{credit}, semester = #{semester}, class_hour = #{classHour}, updated_at = #{updateTime} " +
             "where id = #{id}")
     int update(Course course);
+
+    @Select("SELECT * from tb_course where id IN (select course_id from tb_teacher_course where teacher_id = #{id})")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    List<Teacher> selectCoursesByTeacherId(Long id);
 }

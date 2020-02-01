@@ -3,6 +3,7 @@ package com.angiii.learnplatform.service;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.dto.TeacherDTO;
+import com.angiii.learnplatform.mapper.TeacherCourseMapper;
 import com.angiii.learnplatform.mapper.TeacherMajorMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.domain.dto.RespBean;
@@ -28,6 +29,9 @@ public class TeacherService {
 
     @Autowired
     private TeacherMajorMapper teacherMajorMapper;
+
+    @Autowired
+    private TeacherCourseMapper teacherCourseMapper;
 
     public RespBean save(Teacher teacher) {
         teacher.setCreateTime(new Date());
@@ -66,6 +70,9 @@ public class TeacherService {
                 }
                 if (teacher.getMajors() != null) {
                     teacherDTO.setMajors(teacher.getMajors());
+                }
+                if (teacher.getCourses() != null) {
+                    teacherDTO.setCourses(teacher.getCourses());
                 }
                 teacherDTOS.add(teacherDTO);
             }
@@ -109,7 +116,18 @@ public class TeacherService {
         teacherMajorMapper.delete(teacherId);
         for (String majorId : MajorIds) {
             if (!majorId.equals("[object Object]")) {
+                log.info("majorId:{}",majorId);
                 teacherMajorMapper.insert(teacherId, majorId);
+            }
+        }
+    }
+
+    public void updateTeacherCourses(long teacherId, String[] courseIds) {
+        teacherCourseMapper.delete(teacherId);
+        for (String courseId : courseIds) {
+            if (!courseId.equals("[object Object]")) {
+                log.info("courseId:{}",courseId);
+                teacherCourseMapper.insert(teacherId, courseId);
             }
         }
     }

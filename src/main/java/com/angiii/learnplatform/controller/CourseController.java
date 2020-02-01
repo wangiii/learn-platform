@@ -58,4 +58,10 @@ public class CourseController {
     public RespBean deleteCourse(@PathVariable(name = "id") Long id) {
         return courseService.delete(id);
     }
+
+    @GetMapping("/dtoForAdmin")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public RespBean getAllCourseForAdmin() {
+        return courseService.allDtoForAdmin();
+    }
 }

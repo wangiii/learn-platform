@@ -57,6 +57,10 @@ public class CourseService {
         return RespBean.ok("查询成功", courseMapper.getAllDto(teacher));
     }
 
+    public RespBean allDtoForAdmin() {
+        return RespBean.ok("查询成功", courseMapper.getAllDtoForAdmin());
+    }
+
     public RespBean save(Course course) {
         if (course != null && course.getName() != null) {
             course.setUpdateTime(new Date());

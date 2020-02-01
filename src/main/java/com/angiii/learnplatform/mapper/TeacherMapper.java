@@ -41,7 +41,9 @@ public interface TeacherMapper {
             @Result(property = "faculty.id", column = "facultyId"),
             @Result(property = "faculty.name", column = "facultyName"),
             @Result(property = "majors", column = "id",
-                    many = @Many(select = "com.angiii.learnplatform.mapper.MajorMapper.selectMajorsByTeacherId"))
+                    many = @Many(select = "com.angiii.learnplatform.mapper.MajorMapper.selectMajorsByTeacherId")),
+            @Result(property = "courses", column = "id",
+                    many = @Many(select = "com.angiii.learnplatform.mapper.CourseMapper.selectCoursesByTeacherId"))
     })
     List<Teacher> getPage(Integer start, Integer amount);
 

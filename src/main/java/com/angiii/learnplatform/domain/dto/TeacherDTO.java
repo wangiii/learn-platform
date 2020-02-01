@@ -1,5 +1,6 @@
 package com.angiii.learnplatform.domain.dto;
 
+import com.angiii.learnplatform.domain.entity.Course;
 import com.angiii.learnplatform.domain.entity.Major;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -27,4 +28,5 @@ public class TeacherDTO {
     private String facultyName;
 
     private List<Major> majors;
+    private List<Course> courses;
 }
