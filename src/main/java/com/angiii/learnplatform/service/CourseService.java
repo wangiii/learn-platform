@@ -1,12 +1,14 @@
 package com.angiii.learnplatform.service;
 
-import com.angiii.learnplatform.domain.dto.CourseDTO;
+import com.angiii.learnplatform.domain.entity.Teacher;
 import com.angiii.learnplatform.mapper.CourseMapper;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.entity.Course;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.mapper.MajorCourseMapper;
+import com.angiii.learnplatform.mapper.TeacherMapper;
+import com.angiii.learnplatform.util.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,9 @@ public class CourseService {
 
     @Autowired
     private MajorCourseMapper majorCourseMapper;
+
+    @Autowired
+    TeacherMapper teacherMapper;
 
     public RespBean all(PageRequest pageRequest) {
         int pageNum = 1;
@@ -48,7 +53,8 @@ public class CourseService {
     }
 
     public RespBean allDto() {
-        return RespBean.ok("查询成功", courseMapper.getAllDto());
+        Teacher teacher = teacherMapper.selectTeacherByPhone(AuthUtil.getAuthPhone());
+        return RespBean.ok("查询成功", courseMapper.getAllDto(teacher));
     }
 
     public RespBean save(Course course) {

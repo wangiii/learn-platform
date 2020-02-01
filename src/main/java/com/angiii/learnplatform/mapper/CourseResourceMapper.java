@@ -42,7 +42,7 @@ public interface CourseResourceMapper {
     int delete(Long id);
 
     @Update("update tb_resource set " +
-            "name = #{name}, url = #{url}, updated_at = #{updateTime} " +
+            "name = #{name}, updated_at = #{updateTime} " +
             "where id = #{id}")
     int update(CourseResource courseResource);
 

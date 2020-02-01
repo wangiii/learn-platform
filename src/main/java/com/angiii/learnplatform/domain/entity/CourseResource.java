@@ -3,13 +3,13 @@ package com.angiii.learnplatform.domain.entity;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CourseResource extends BaseEntity implements Serializable {
 
     /**

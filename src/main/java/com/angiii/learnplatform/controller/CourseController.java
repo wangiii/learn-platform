@@ -26,7 +26,7 @@ public class CourseController {
     }
 
     @GetMapping("/dto")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')")
+    @PreAuthorize("hasAnyRole('ROLE_TEACHER')")
     public RespBean getAllCourse() {
         return courseService.allDto();
     }

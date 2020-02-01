@@ -1,20 +1,21 @@
 package com.angiii.learnplatform.service;
 
-import com.angiii.learnplatform.domain.dto.CourseResourceDTO;
-import com.angiii.learnplatform.domain.dto.PageRequest;
-import com.angiii.learnplatform.domain.dto.PageResponse;
-import com.angiii.learnplatform.domain.dto.RespBean;
+import com.angiii.learnplatform.domain.dto.*;
 import com.angiii.learnplatform.domain.entity.CourseResource;
 import com.angiii.learnplatform.domain.entity.ResourceTypeEnum;
 import com.angiii.learnplatform.domain.entity.Teacher;
 import com.angiii.learnplatform.mapper.CourseResourceMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
+import com.angiii.learnplatform.util.AliyunOssUtil;
 import com.angiii.learnplatform.util.AuthUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,17 +31,46 @@ public class CourseResourceService {
     @Autowired
     TeacherMapper teacherMapper;
 
+    @Autowired
+    AliyunOssUtil aliyunOssUtil;
+
     public RespBean save(CourseResource courseResource) {
-        if (courseResource != null && courseResource.getName() != null) {
+        if (courseResource != null
+                && courseResource.getName() != null
+                && courseResource.getCourse() != null
+                && courseResource.getUrl() != null
+                && courseResource.getType() != null) {
+            Teacher teacher = teacherMapper.selectTeacherByPhone(AuthUtil.getAuthPhone());
+            courseResource.setFaculty(teacher.getFaculty());
+            courseResource.setTeacher(teacher);
             courseResource.setUpdateTime(new Date());
             courseResource.setCreateTime(new Date());
-
-            Teacher teacher = teacherMapper.selectTeacherByPhone(AuthUtil.getAuthPhone());
-            courseResource.setTeacher(teacher);
 
             if (courseResourceMapper.insert(courseResource) == 1) {
                 return RespBean.ok("添加成功", courseResource);
             }
+        }
+        throw new IllegalArgumentException("添加失败");
+    }
+
+    public RespBean saveRes(CourseResourceRequest courseResourceRequest) {
+        if (courseResourceRequest.getFile() != null && courseResourceRequest.getType() != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String now = sdf.format(new Date());
+            String originalFilename = courseResourceRequest.getFile().getOriginalFilename();
+            String suffix = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+            int random = (int)((Math.random()*9+1)*1000);
+            String fileName = courseResourceRequest.getType() + "/" + now + random + "." + suffix;
+
+            try {
+                InputStream inputStream = courseResourceRequest.getFile().getInputStream();
+                aliyunOssUtil.upload(inputStream, fileName);
+            } catch (IOException e) {
+                return RespBean.error("文件上传失败");
+            }
+
+            String url = "http://learn-platform-jason.oss-cn-shenzhen.aliyuncs.com/" + fileName;
+            return RespBean.ok("添加成功", url);
         }
         throw new IllegalArgumentException("添加失败");
     }

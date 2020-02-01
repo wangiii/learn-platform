@@ -1,12 +1,11 @@
 package com.angiii.learnplatform.controller;
 
+import com.angiii.learnplatform.domain.dto.CourseResourceRequest;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.domain.entity.CourseResource;
-import com.angiii.learnplatform.domain.entity.Faculty;
 import com.angiii.learnplatform.domain.entity.ResourceTypeEnum;
 import com.angiii.learnplatform.service.CourseResourceService;
-import com.angiii.learnplatform.service.FacultyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,9 +21,18 @@ public class CourseResourceController {
     CourseResourceService courseResourceService;
 
     @PostMapping("/")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')")
+    @PreAuthorize("hasAnyRole('ROLE_TEACHER')")
     public RespBean add(CourseResource courseResource) {
+        log.info("url:{}", courseResource.getUrl());
         return courseResourceService.save(courseResource);
+    }
+
+    @PostMapping("/res")
+    @PreAuthorize("hasAnyRole('ROLE_TEACHER')")
+    public RespBean addRes(CourseResourceRequest courseResourceRequest) {
+        log.info("file:{}", courseResourceRequest.getFile());
+        log.info("type:{}", courseResourceRequest.getType());
+        return courseResourceService.saveRes(courseResourceRequest);
     }
 
     @GetMapping("/type/{type}")

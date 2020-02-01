@@ -2,6 +2,7 @@ package com.angiii.learnplatform.mapper;
 
 import com.angiii.learnplatform.domain.dto.CourseDTO;
 import com.angiii.learnplatform.domain.entity.Course;
+import com.angiii.learnplatform.domain.entity.Teacher;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -9,8 +10,9 @@ import java.util.List;
 @Mapper
 public interface CourseMapper {
 
-    @Select("select id as value, name as label from tb_course ORDER BY id DESC")
-    List<CourseDTO> getAllDto();
+    @Select("select id as value, name as label from tb_course " +
+            "where id in (select course_id from tb_teacher_course where teacher_id = #{id})")
+    List<CourseDTO> getAllDto(Teacher teacher);
 
     @Select("select * from tb_course ORDER BY id DESC limit #{start}, #{amount}")
     @Results({
