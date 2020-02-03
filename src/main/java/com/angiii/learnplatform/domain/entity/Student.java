@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @ToString(callSuper = true)
@@ -37,4 +38,9 @@ public class Student extends BaseEntity implements Serializable {
      * 学生所属院系
      */
     private Faculty faculty;
+
+    /**
+     * 学生所选课程
+     */
+    private List<Course> courses;
 }
