@@ -91,4 +91,11 @@ public class MajorService {
     public RespBean getAllMajors() {
         return RespBean.ok("查询成功", majorMapper.selectAllMajors());
     }
+
+    public RespBean getMajorsByFacultyId(Long facultyId) {
+        if (facultyId == null) {
+            return RespBean.ok("查询成功", majorMapper.selectMajors());
+        }
+        return RespBean.ok("查询成功", majorMapper.selectMajorsByFacultyId(facultyId));
+    }
 }

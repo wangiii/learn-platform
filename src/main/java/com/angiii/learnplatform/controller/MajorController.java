@@ -48,4 +48,9 @@ public class MajorController {
     public RespBean updateMajor(@PathVariable(name = "id") Long id, Major major) {
         return majorService.update(id, major);
     }
+
+    @GetMapping("/byFacultyId")
+    public RespBean getMajorsByFaculty(@RequestParam(value = "facultyId") Long facultyId) {
+        return majorService.getMajorsByFacultyId(facultyId);
+    }
 }
