@@ -56,5 +56,12 @@ public interface CourseMapper {
             @Result(property = "createTime", column = "created_at"),
             @Result(property = "updateTime", column = "updated_at")
     })
-    List<Teacher> selectCoursesByTeacherId(Long id);
+    List<Course> selectCoursesByTeacherId(Long id);
+
+    @Select("SELECT * from tb_course where id IN (select course_id from tb_major_course where major_id = #{majorId}) ORDER BY id DESC limit #{start}, #{amount}")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    List<Course> selectCoursesByMajorId(Long majorId, Integer start, Integer amount);
 }

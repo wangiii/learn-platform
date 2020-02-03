@@ -64,4 +64,9 @@ public class CourseController {
     public RespBean getAllCourseForAdmin() {
         return courseService.allDtoForAdmin();
     }
+
+    @GetMapping("/byMajorId")
+    public RespBean getCourseByMajor(@RequestParam(value = "majorId") Long majorId, PageRequest pageRequest) {
+        return courseService.getByMajorId(majorId, pageRequest);
+    }
 }

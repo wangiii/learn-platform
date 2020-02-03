@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -111,5 +112,28 @@ public class CourseService {
                 majorCourseMapper.insert(courseId, majorId);
             }
         }
+    }
+
+    public RespBean getByMajorId(Long majorId, PageRequest pageRequest) {
+        int pageNum = 1;
+        int pageSize = 5;
+        if (pageRequest != null
+                && pageRequest.getPageSize() > 0
+                && pageRequest.getPageNum() > 0) {
+            pageNum = pageRequest.getPageNum();
+            pageSize = pageRequest.getPageSize();
+        }
+
+        Integer start = (pageNum - 1) * pageSize;
+        Integer amount = pageSize;
+        Integer total = courseMapper.getAllCount();
+        Integer pages = total / pageSize + 1;
+        PageResponse pageResponse = PageResponse.builder().
+                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
+        List<Course> courses = courseMapper.selectCoursesByMajorId(majorId, start, amount);
+        pageResponse.setList(courses);
+        pageResponse.setSize(courses.size());
+
+        return RespBean.ok("查询成功", pageResponse);
     }
 }
