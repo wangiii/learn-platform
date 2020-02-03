@@ -54,4 +54,12 @@ public class CourseResourceController {
     public RespBean delete(@PathVariable(name = "id") Long id) {
         return courseResourceService.delete(id);
     }
+
+    @GetMapping("/course/{courseId}")
+    public RespBean getByCourse(@PathVariable(name = "courseId") Long courseId, @RequestParam(value = "type") ResourceTypeEnum resourceTypeEnum, PageRequest pageRequest) {
+        log.info("pageRequest:{}", pageRequest);
+        log.info("courseId:{}", courseId);
+        log.info("resourceTypeEnum:{}", resourceTypeEnum);
+        return courseResourceService.getByCourse(pageRequest, resourceTypeEnum, courseId);
+    }
 }

@@ -141,4 +141,49 @@ public class CourseResourceService {
 
         return RespBean.ok("查询成功", pageResponse);
     }
+
+    public RespBean getByCourse(PageRequest pageRequest, ResourceTypeEnum resourceTypeEnum, Long courseId) {
+        int pageNum = 1;
+        int pageSize = 5;
+        if (pageRequest != null
+                && pageRequest.getPageSize() > 0
+                && pageRequest.getPageNum() > 0) {
+            pageNum = pageRequest.getPageNum();
+            pageSize = pageRequest.getPageSize();
+        }
+
+        Integer start = (pageNum - 1) * pageSize;
+        Integer amount = pageSize;
+        Integer total = courseResourceMapper.getAllCountByCourse(resourceTypeEnum, courseId);
+        Integer pages = total / pageSize + 1;
+        PageResponse pageResponse = PageResponse.builder().
+                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
+
+        List<CourseResource> courseResources = courseResourceMapper.getPageByCourse(start, amount, resourceTypeEnum, courseId);
+
+        if (courseResources != null) {
+            List<CourseResourceDTO> courseResourceDTOS = new ArrayList<>();
+            for (CourseResource courseResource : courseResources) {
+                CourseResourceDTO courseResourceDTO = CourseResourceDTO.builder().id(courseResource.getId()).name(courseResource.getName()).url(courseResource.getUrl()).
+                        createTime(courseResource.getCreateTime()).updateTime(courseResource.getUpdateTime()).build();
+                if (courseResource.getFaculty() != null) {
+                    courseResourceDTO.setFacultyId(courseResource.getFaculty().getId());
+                    courseResourceDTO.setFacultyName(courseResource.getFaculty().getName());
+                }
+                if (courseResource.getCourse() != null) {
+                    courseResourceDTO.setCourseId(courseResource.getCourse().getId());
+                    courseResourceDTO.setCourseName(courseResource.getCourse().getName());
+                }
+                if (courseResource.getTeacher() != null) {
+                    courseResourceDTO.setTeacherId(courseResource.getTeacher().getId());
+                    courseResourceDTO.setTeacherName(courseResource.getTeacher().getName());
+                }
+                courseResourceDTOS.add(courseResourceDTO);
+            }
+            pageResponse.setList(courseResourceDTOS);
+            pageResponse.setSize(courseResourceDTOS.size());
+        }
+
+        return RespBean.ok("查询成功", pageResponse);
+    }
 }
