@@ -37,6 +37,11 @@ public class FacultyController {
         return facultyService.allFacultyDTO();
     }
 
+    @GetMapping("/facultyResponse")
+    public RespBean getAllFacultyResponse() {
+        return facultyService.allFacultyResponse();
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean updateFaculty(@PathVariable(name = "id") Long id, Faculty faculty) {

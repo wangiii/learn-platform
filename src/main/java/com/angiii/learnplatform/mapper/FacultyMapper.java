@@ -1,6 +1,7 @@
 package com.angiii.learnplatform.mapper;
 
 import com.angiii.learnplatform.domain.dto.FacultyDTO;
+import com.angiii.learnplatform.domain.dto.FacultyResponse;
 import com.angiii.learnplatform.domain.entity.Faculty;
 import org.apache.ibatis.annotations.*;
 
@@ -22,6 +23,9 @@ public interface FacultyMapper {
 
     @Select("select id as value, name as label from tb_faculty")
     List<FacultyDTO> getFacultyDTO();
+
+    @Select("select id, name from tb_faculty")
+    List<FacultyResponse> getFacultyResponse();
 
     @Select("select count(*) from tb_faculty ")
     Integer getAllCount();
