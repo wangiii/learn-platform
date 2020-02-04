@@ -9,11 +9,11 @@ import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.mapper.MajorCourseMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.util.AuthUtil;
+import com.angiii.learnplatform.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,22 +31,10 @@ public class CourseService {
     TeacherMapper teacherMapper;
 
     public RespBean all(PageRequest pageRequest) {
-        int pageNum = 1;
-        int pageSize = 5;
-        if (pageRequest != null
-                && pageRequest.getPageSize() > 0
-                && pageRequest.getPageNum() > 0) {
-            pageNum = pageRequest.getPageNum();
-            pageSize = pageRequest.getPageSize();
-        }
-
-        Integer start = (pageNum - 1) * pageSize;
-        Integer amount = pageSize;
         Integer total = courseMapper.getAllCount();
-        Integer pages = total / pageSize + 1;
-        PageResponse pageResponse = PageResponse.builder().
-                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-        List<Course> courses = courseMapper.getPage(start, amount);
+        PageUtil pageUtil = new PageUtil(pageRequest, total);
+        List<Course> courses = courseMapper.getPage(pageUtil.getStart(), pageUtil.getPageSize());
+        PageResponse pageResponse = pageUtil.getPageResponse();
         pageResponse.setList(courses);
         pageResponse.setSize(courses.size());
 
@@ -115,22 +103,10 @@ public class CourseService {
     }
 
     public RespBean getByMajorId(Long majorId, PageRequest pageRequest) {
-        int pageNum = 1;
-        int pageSize = 5;
-        if (pageRequest != null
-                && pageRequest.getPageSize() > 0
-                && pageRequest.getPageNum() > 0) {
-            pageNum = pageRequest.getPageNum();
-            pageSize = pageRequest.getPageSize();
-        }
-
-        Integer start = (pageNum - 1) * pageSize;
-        Integer amount = pageSize;
-        Integer total = courseMapper.getAllCount();
-        Integer pages = total / pageSize + 1;
-        PageResponse pageResponse = PageResponse.builder().
-                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-        List<Course> courses = courseMapper.selectCoursesByMajorId(majorId, start, amount);
+        Integer total = courseMapper.getCountByMajor(majorId);
+        PageUtil pageUtil = new PageUtil(pageRequest, total);
+        List<Course> courses = courseMapper.selectCoursesByMajorId(majorId, pageUtil.getStart(), pageUtil.getPageSize());
+        PageResponse pageResponse = pageUtil.getPageResponse();
         pageResponse.setList(courses);
         pageResponse.setSize(courses.size());
 

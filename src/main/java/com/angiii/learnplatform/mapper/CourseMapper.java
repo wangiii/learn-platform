@@ -31,6 +31,9 @@ public interface CourseMapper {
     @Select("select count(*) from tb_course ")
     Integer getAllCount();
 
+    @Select("select count(*) from tb_course where id IN (select course_id from tb_major_course where major_id = #{majorId})")
+    Integer getCountByMajor(Long majorId);
+
     @Select("select * from tb_course where id = #{id}")
     @Results({
             @Result(property = "classHour", column = "class_hour"),
