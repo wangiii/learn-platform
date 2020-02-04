@@ -5,6 +5,7 @@ import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.entity.Faculty;
 import com.angiii.learnplatform.domain.dto.RespBean;
+import com.angiii.learnplatform.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,22 +52,10 @@ public class FacultyService {
     }
 
     public RespBean all(PageRequest pageRequest) {
-        int pageNum = 1;
-        int pageSize = 5;
-        if (pageRequest != null
-                && pageRequest.getPageSize() > 0
-                && pageRequest.getPageNum() > 0) {
-            pageNum = pageRequest.getPageNum();
-            pageSize = pageRequest.getPageSize();
-        }
-
-        Integer start = (pageNum - 1) * pageSize;
-        Integer amount = pageSize;
         Integer total = facultyMapper.getAllCount();
-        Integer pages = total / pageSize + 1;
-        PageResponse pageResponse = PageResponse.builder().
-                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-        List<Faculty> faculties = facultyMapper.getPage(start, amount);
+        PageUtil pageUtil = new PageUtil(pageRequest, total);
+        List<Faculty> faculties = facultyMapper.getPage(pageUtil.getStart(), pageUtil.getPageSize());
+        PageResponse pageResponse = pageUtil.getPageResponse();
         pageResponse.setList(faculties);
         pageResponse.setSize(faculties.size());
 

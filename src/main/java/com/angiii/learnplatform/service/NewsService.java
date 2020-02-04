@@ -8,6 +8,7 @@ import com.angiii.learnplatform.domain.entity.Teacher;
 import com.angiii.learnplatform.mapper.NewsMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.util.AuthUtil;
+import com.angiii.learnplatform.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,22 +83,11 @@ public class NewsService {
     }
 
     public RespBean all(PageRequest pageRequest) {
-        int pageNum = 1;
-        int pageSize = 5;
-        if (pageRequest != null
-                && pageRequest.getPageSize() > 0
-                && pageRequest.getPageNum() > 0) {
-            pageNum = pageRequest.getPageNum();
-            pageSize = pageRequest.getPageSize();
-        }
-        Integer start = (pageNum - 1) * pageSize;
-        Integer amount = pageSize;
         if (AuthUtil.getRoles().contains("ROLE_ADMIN")) {
             Integer total = newsMapper.getAllCount();
-            Integer pages = total / pageSize + 1;
-            PageResponse pageResponse = PageResponse.builder().
-                    pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-            List<News> news = newsMapper.getPage(start, amount);
+            PageUtil pageUtil = new PageUtil(pageRequest, total);
+            PageResponse pageResponse = pageUtil.getPageResponse();
+            List<News> news = newsMapper.getPage(pageUtil.getStart(), pageUtil.getPageSize());
             pageResponse.setList(news);
             pageResponse.setSize(news.size());
 
@@ -109,10 +99,9 @@ public class NewsService {
                 throw new IllegalArgumentException("教师手机有误");
             }
             Integer total = newsMapper.getCountForTeacher(teacher.getId());
-            Integer pages = total / pageSize + 1;
-            PageResponse pageResponse = PageResponse.builder().
-                    pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-            List<News> news = newsMapper.getPageByTeacherId(start, amount, teacher.getId());
+            PageUtil pageUtil = new PageUtil(pageRequest, total);
+            PageResponse pageResponse = pageUtil.getPageResponse();
+            List<News> news = newsMapper.getPageByTeacherId(pageUtil.getStart(), pageUtil.getPageSize(), teacher.getId());
             pageResponse.setList(news);
             pageResponse.setSize(news.size());
 

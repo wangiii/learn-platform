@@ -8,16 +8,14 @@ import com.angiii.learnplatform.mapper.TeacherMajorMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.domain.entity.Teacher;
+import com.angiii.learnplatform.util.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -43,42 +41,14 @@ public class TeacherService {
     }
 
     public RespBean all(PageRequest pageRequest) {
-        int pageNum = 1;
-        int pageSize = 5;
-        if (pageRequest != null
-                && pageRequest.getPageSize() > 0
-                && pageRequest.getPageNum() > 0) {
-            pageNum = pageRequest.getPageNum();
-            pageSize = pageRequest.getPageSize();
-        }
-
-        Integer start = (pageNum - 1) * pageSize;
-        Integer amount = pageSize;
         Integer total = teacherMapper.getAllCount();
-        Integer pages = total / pageSize + 1;
-        PageResponse pageResponse = PageResponse.builder().
-                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-        List<Teacher> teachers = teacherMapper.getPage(start, amount);
-        if (teachers != null) {
-            List<TeacherDTO> teacherDTOS = new ArrayList<>();
-            for (Teacher teacher : teachers) {
-                TeacherDTO teacherDTO = TeacherDTO.builder().id(teacher.getId()).name(teacher.getName()).phone(teacher.getPhone()).
-                        createTime(teacher.getCreateTime()).updateTime(teacher.getUpdateTime()).build();
-                if (teacher.getFaculty() != null) {
-                    teacherDTO.setFacultyId(teacher.getFaculty().getId());
-                    teacherDTO.setFacultyName(teacher.getFaculty().getName());
-                }
-                if (teacher.getMajors() != null) {
-                    teacherDTO.setMajors(teacher.getMajors());
-                }
-                if (teacher.getCourses() != null) {
-                    teacherDTO.setCourses(teacher.getCourses());
-                }
-                teacherDTOS.add(teacherDTO);
-            }
-            pageResponse.setList(teacherDTOS);
-            pageResponse.setSize(teacherDTOS.size());
-        }
+        PageUtil pageUtil = new PageUtil(pageRequest, total);
+        PageResponse pageResponse = pageUtil.getPageResponse();
+        List<Teacher> teachers = teacherMapper.getPage(pageUtil.getStart(), pageUtil.getPageSize());
+        TeacherDTO dto = new TeacherDTO();
+        List<TeacherDTO> teacherDTOS = dto.convert(teachers);
+        pageResponse.setList(teacherDTOS);
+        pageResponse.setSize(teacherDTOS.size());
 
         return RespBean.ok("查询成功", pageResponse);
     }
@@ -133,44 +103,14 @@ public class TeacherService {
     }
 
     public RespBean search(PageRequest pageRequest, String phone) {
-        Pattern pattern = Pattern.compile("[0-9]+");
-        Matcher isNum = pattern.matcher(phone);
-        if (!isNum.matches()) {
-            throw new IllegalArgumentException("手机号有误");
-        }
-        int pageNum = 1;
-        int pageSize = 5;
-        if (pageRequest != null
-                && pageRequest.getPageSize() > 0
-                && pageRequest.getPageNum() > 0) {
-            pageNum = pageRequest.getPageNum();
-            pageSize = pageRequest.getPageSize();
-        }
-
-        Integer start = (pageNum - 1) * pageSize;
-        Integer amount = pageSize;
         Integer total = teacherMapper.getSearchCount(phone);
-        Integer pages = total / pageSize + 1;
-        PageResponse pageResponse = PageResponse.builder().
-                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-        List<Teacher> teachers = teacherMapper.getSearch(start, amount, phone);
-        if (teachers != null) {
-            List<TeacherDTO> teacherDTOS = new ArrayList<>();
-            for (Teacher teacher : teachers) {
-                TeacherDTO teacherDTO = TeacherDTO.builder().id(teacher.getId()).name(teacher.getName()).phone(teacher.getPhone()).
-                        createTime(teacher.getCreateTime()).updateTime(teacher.getUpdateTime()).build();
-                if (teacher.getFaculty() != null) {
-                    teacherDTO.setFacultyId(teacher.getFaculty().getId());
-                    teacherDTO.setFacultyName(teacher.getFaculty().getName());
-                }
-                if (teacher.getMajors() != null) {
-                    teacherDTO.setMajors(teacher.getMajors());
-                }
-                teacherDTOS.add(teacherDTO);
-            }
-            pageResponse.setList(teacherDTOS);
-            pageResponse.setSize(teacherDTOS.size());
-        }
+        PageUtil pageUtil = new PageUtil(pageRequest, total);
+        PageResponse pageResponse = pageUtil.getPageResponse();
+        List<Teacher> teachers = teacherMapper.getSearch(pageUtil.getStart(), pageUtil.getPageSize(), phone);
+        TeacherDTO dto = new TeacherDTO();
+        List<TeacherDTO> teacherDTOS = dto.convert(teachers);
+        pageResponse.setList(teacherDTOS);
+        pageResponse.setSize(teacherDTOS.size());
 
         return RespBean.ok("查询成功", pageResponse);
     }
