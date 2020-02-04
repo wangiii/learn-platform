@@ -8,6 +8,7 @@ import com.angiii.learnplatform.mapper.CourseResourceMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.util.AliyunOssUtil;
 import com.angiii.learnplatform.util.AuthUtil;
+import com.angiii.learnplatform.util.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -96,94 +96,48 @@ public class CourseResourceService {
     }
 
     public RespBean all(PageRequest pageRequest, ResourceTypeEnum resourceTypeEnum) {
-
         Teacher teacher = teacherMapper.selectTeacherByPhone(AuthUtil.getAuthPhone());
-        int pageNum = 1;
-        int pageSize = 5;
-        if (pageRequest != null
-                && pageRequest.getPageSize() > 0
-                && pageRequest.getPageNum() > 0) {
-            pageNum = pageRequest.getPageNum();
-            pageSize = pageRequest.getPageSize();
-        }
-
-        Integer start = (pageNum - 1) * pageSize;
-        Integer amount = pageSize;
         Integer total = courseResourceMapper.getAllCount(resourceTypeEnum, teacher);
-        Integer pages = total / pageSize + 1;
-        PageResponse pageResponse = PageResponse.builder().
-                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-
-        List<CourseResource> courseResources = courseResourceMapper.getPage(start, amount, resourceTypeEnum, teacher);
-
-        if (courseResources != null) {
-            List<CourseResourceDTO> courseResourceDTOS = new ArrayList<>();
-            for (CourseResource courseResource : courseResources) {
-                CourseResourceDTO courseResourceDTO = CourseResourceDTO.builder().id(courseResource.getId()).name(courseResource.getName()).url(courseResource.getUrl()).
-                        createTime(courseResource.getCreateTime()).updateTime(courseResource.getUpdateTime()).build();
-                if (courseResource.getFaculty() != null) {
-                    courseResourceDTO.setFacultyId(courseResource.getFaculty().getId());
-                    courseResourceDTO.setFacultyName(courseResource.getFaculty().getName());
-                }
-                if (courseResource.getCourse() != null) {
-                    courseResourceDTO.setCourseId(courseResource.getCourse().getId());
-                    courseResourceDTO.setCourseName(courseResource.getCourse().getName());
-                }
-                if (courseResource.getTeacher() != null) {
-                    courseResourceDTO.setTeacherId(courseResource.getTeacher().getId());
-                    courseResourceDTO.setTeacherName(courseResource.getTeacher().getName());
-                }
-                courseResourceDTOS.add(courseResourceDTO);
-            }
-            pageResponse.setList(courseResourceDTOS);
-            pageResponse.setSize(courseResourceDTOS.size());
-        }
+        PageResponse pageResponse = getPageResponseForAll(pageRequest, total, resourceTypeEnum, teacher);
 
         return RespBean.ok("查询成功", pageResponse);
     }
 
     public RespBean getByCourse(PageRequest pageRequest, ResourceTypeEnum resourceTypeEnum, Long courseId) {
-        int pageNum = 1;
-        int pageSize = 5;
-        if (pageRequest != null
-                && pageRequest.getPageSize() > 0
-                && pageRequest.getPageNum() > 0) {
-            pageNum = pageRequest.getPageNum();
-            pageSize = pageRequest.getPageSize();
-        }
-
-        Integer start = (pageNum - 1) * pageSize;
-        Integer amount = pageSize;
         Integer total = courseResourceMapper.getAllCountByCourse(resourceTypeEnum, courseId);
-        Integer pages = total / pageSize + 1;
-        PageResponse pageResponse = PageResponse.builder().
-                pageNum(pageNum).pageSize(pageSize).total(total).pages(pages).build();
-
-        List<CourseResource> courseResources = courseResourceMapper.getPageByCourse(start, amount, resourceTypeEnum, courseId);
-
-        if (courseResources != null) {
-            List<CourseResourceDTO> courseResourceDTOS = new ArrayList<>();
-            for (CourseResource courseResource : courseResources) {
-                CourseResourceDTO courseResourceDTO = CourseResourceDTO.builder().id(courseResource.getId()).name(courseResource.getName()).url(courseResource.getUrl()).
-                        createTime(courseResource.getCreateTime()).updateTime(courseResource.getUpdateTime()).build();
-                if (courseResource.getFaculty() != null) {
-                    courseResourceDTO.setFacultyId(courseResource.getFaculty().getId());
-                    courseResourceDTO.setFacultyName(courseResource.getFaculty().getName());
-                }
-                if (courseResource.getCourse() != null) {
-                    courseResourceDTO.setCourseId(courseResource.getCourse().getId());
-                    courseResourceDTO.setCourseName(courseResource.getCourse().getName());
-                }
-                if (courseResource.getTeacher() != null) {
-                    courseResourceDTO.setTeacherId(courseResource.getTeacher().getId());
-                    courseResourceDTO.setTeacherName(courseResource.getTeacher().getName());
-                }
-                courseResourceDTOS.add(courseResourceDTO);
-            }
-            pageResponse.setList(courseResourceDTOS);
-            pageResponse.setSize(courseResourceDTOS.size());
-        }
+        PageResponse pageResponse = getPageResponseByCourse(pageRequest, total, resourceTypeEnum, courseId);
 
         return RespBean.ok("查询成功", pageResponse);
+    }
+
+    private PageResponse getPageResponseForAll(PageRequest pageRequest, Integer total, ResourceTypeEnum resourceTypeEnum, Teacher teacher) {
+        PageUtil pageUtil = new PageUtil(pageRequest, total);
+        PageResponse pageResponse = pageUtil.getPageResponse();
+
+        List<CourseResource> courseResources = courseResourceMapper.getPage(pageUtil.getStart(), pageUtil.getPageSize(), resourceTypeEnum, teacher);
+        List<CourseResourceDTO> courseResourceDTOS = getCourseResourceDTOsByCourseResources(courseResources);
+
+        pageResponse.setList(courseResourceDTOS);
+        pageResponse.setSize(courseResourceDTOS.size());
+
+        return pageResponse;
+    }
+
+    private PageResponse getPageResponseByCourse(PageRequest pageRequest, Integer total, ResourceTypeEnum resourceTypeEnum, Long courseId) {
+        PageUtil pageUtil = new PageUtil(pageRequest, total);
+        PageResponse pageResponse = pageUtil.getPageResponse();
+
+        List<CourseResource> courseResources = courseResourceMapper.getPageByCourse(pageUtil.getStart(), pageUtil.getPageSize(), resourceTypeEnum, courseId);
+        List<CourseResourceDTO> courseResourceDTOS = getCourseResourceDTOsByCourseResources(courseResources);
+
+        pageResponse.setList(courseResourceDTOS);
+        pageResponse.setSize(courseResourceDTOS.size());
+
+        return pageResponse;
+    }
+
+    private List<CourseResourceDTO> getCourseResourceDTOsByCourseResources(List<CourseResource> courseResources) {
+        CourseResourceDTO dto = new CourseResourceDTO();
+        return dto.convert(courseResources);
     }
 }
