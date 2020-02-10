@@ -28,7 +28,7 @@ public class CourseResourceController {
     }
 
     @PostMapping("/res")
-    @PreAuthorize("hasAnyRole('ROLE_TEACHER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')")
     public RespBean addRes(CourseResourceRequest courseResourceRequest) {
         log.info("file:{}", courseResourceRequest.getFile());
         log.info("type:{}", courseResourceRequest.getType());
