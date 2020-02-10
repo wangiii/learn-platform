@@ -3,6 +3,8 @@ package com.angiii.learnplatform.config;
 import com.angiii.learnplatform.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -45,6 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.
                 cors().and().csrf().disable()
                 .authorizeRequests().antMatchers("/login").permitAll().
+                antMatchers("/faculty/getAllWithMajor").permitAll(). // 前台选择院系菜单
+                antMatchers("/course/withoutMajor").permitAll(). // 前台课程列表
+                antMatchers("/course/byMajorId/*").permitAll(). // 前台课程列表
                 anyRequest().authenticated().and().
                 exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

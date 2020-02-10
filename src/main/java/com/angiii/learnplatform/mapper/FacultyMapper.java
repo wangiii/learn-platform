@@ -44,4 +44,14 @@ public interface FacultyMapper {
             @Result(property = "updateTime", column = "updated_at")
     })
     Faculty selectFacultyById(Long id);
+
+    @Select("select * from tb_faculty ORDER BY id")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "majors", column = "id",
+                    many = @Many(select = "com.angiii.learnplatform.mapper.MajorMapper.selectMajorsByFaculty")),
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    List<Faculty> getAllWithMajor();
 }

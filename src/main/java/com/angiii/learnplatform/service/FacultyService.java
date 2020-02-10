@@ -69,4 +69,8 @@ public class FacultyService {
     public RespBean allFacultyResponse() {
         return RespBean.ok("查询成功", facultyMapper.getFacultyResponse());
     }
+
+    public List<Faculty> getAllWithMajor() {
+        return facultyMapper.getAllWithMajor();
+    }
 }

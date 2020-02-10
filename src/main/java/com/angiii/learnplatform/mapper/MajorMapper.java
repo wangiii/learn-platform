@@ -72,4 +72,11 @@ public interface MajorMapper {
 
     @Select("select id, name from tb_major")
     List<MajorResponse> selectMajors();
+
+    @Select("SELECT * from tb_major where faculty_id  = #{facultyId}")
+    @Results({
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "updateTime", column = "updated_at")
+    })
+    List<Major> selectMajorsByFaculty(Long facultyId);
 }

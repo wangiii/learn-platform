@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("faculty")
@@ -29,6 +31,11 @@ public class FacultyController {
     public RespBean getAllFaculty(PageRequest pageRequest) {
         log.info("pageRequest{}", pageRequest);
         return facultyService.all(pageRequest);
+    }
+
+    @GetMapping("/getAllWithMajor")
+    public List<Faculty> getAllFacultyWithMajor() {
+        return facultyService.getAllWithMajor();
     }
 
     @GetMapping("/dto")
