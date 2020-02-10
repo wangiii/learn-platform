@@ -25,6 +25,12 @@ public class CourseController {
         return courseService.all(pageRequest);
     }
 
+    @GetMapping("/withoutMajor")
+    public RespBean getAllCourseWithoutMajor(PageRequest pageRequest) {
+        log.info("pageRequest{}", pageRequest);
+        return courseService.getAllWithoutMajor(pageRequest);
+    }
+
     @GetMapping("/dto")
     @PreAuthorize("hasAnyRole('ROLE_TEACHER')")
     public RespBean getAllCourse() {
@@ -65,8 +71,8 @@ public class CourseController {
         return courseService.allDtoForAdmin();
     }
 
-    @GetMapping("/byMajorId")
-    public RespBean getCourseByMajor(@RequestParam(value = "majorId") Long majorId, PageRequest pageRequest) {
+    @GetMapping("/byMajorId/{majorId}")
+    public RespBean getCourseByMajor(@PathVariable(name = "majorId") Long majorId, PageRequest pageRequest) {
         return courseService.getByMajorId(majorId, pageRequest);
     }
 }

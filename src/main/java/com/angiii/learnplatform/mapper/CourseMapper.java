@@ -67,4 +67,7 @@ public interface CourseMapper {
             @Result(property = "updateTime", column = "updated_at")
     })
     List<Course> selectCoursesByMajorId(Long majorId, Integer start, Integer amount);
+
+    @Select("select * from tb_course ORDER BY id DESC limit #{start}, #{amount}")
+    List<Course> getAll(Integer start, Integer amount);
 }

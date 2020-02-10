@@ -8,5 +8,6 @@ public enum ResourceTypeEnum implements Serializable {
     HOMEWORK, // 作业
     CASE, // 案例
     INSTRUCTION, //实验指导书
-    SYLLABUS // 课程大纲
+    SYLLABUS, // 课程大纲
+    COVER // 课程封面图
 }

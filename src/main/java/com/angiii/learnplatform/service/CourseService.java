@@ -112,4 +112,15 @@ public class CourseService {
 
         return RespBean.ok("查询成功", pageResponse);
     }
+
+    public RespBean getAllWithoutMajor(PageRequest pageRequest) {
+        Integer total = courseMapper.getAllCount();
+        PageUtil pageUtil = new PageUtil(pageRequest, total);
+        List<Course> courses = courseMapper.getAll(pageUtil.getStart(), pageUtil.getPageSize());
+        PageResponse pageResponse = pageUtil.getPageResponse();
+        pageResponse.setList(courses);
+        pageResponse.setSize(courses.size());
+
+        return RespBean.ok("查询成功", pageResponse);
+    }
 }
