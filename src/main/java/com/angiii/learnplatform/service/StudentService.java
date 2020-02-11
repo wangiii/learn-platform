@@ -1,11 +1,9 @@
 package com.angiii.learnplatform.service;
 
-import com.angiii.learnplatform.domain.dto.PageRequest;
-import com.angiii.learnplatform.domain.dto.PageResponse;
-import com.angiii.learnplatform.domain.dto.RespBean;
-import com.angiii.learnplatform.domain.dto.StudentDTO;
+import com.angiii.learnplatform.domain.dto.*;
 import com.angiii.learnplatform.domain.entity.Student;
 import com.angiii.learnplatform.mapper.StudentMapper;
+import com.angiii.learnplatform.util.AuthUtil;
 import com.angiii.learnplatform.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -71,15 +69,18 @@ public class StudentService {
         return RespBean.error("查询失败");
     }
 
-    public RespBean update(String phone, Student student) {
-        if (student != null
-                && student.getName() != null
-                && student.getPassword() != null) {
-            student.setPhone(phone);
-            student.setUpdateTime(new Date());
-            if (studentMapper.update(student) == 1) {
-                Student RealStudent = studentMapper.selectStudentByPhone(student.getPhone());
-                return RespBean.ok("更新成功", RealStudent);
+    public RespBean update(StudentPasswordRequest studentPasswordRequest) {
+        if (studentPasswordRequest != null
+                && studentPasswordRequest.getPassword() != null
+                && studentPasswordRequest.getOldPassword() != null) {
+            String realPassword = studentMapper.selectStudentPasswordByPhone(AuthUtil.getAuthPhone());
+            if (bCryptPasswordEncoder.matches(studentPasswordRequest.getOldPassword(), realPassword)) {
+                String newPassword = bCryptPasswordEncoder.encode(studentPasswordRequest.getPassword());
+                Student student = Student.builder().phone(AuthUtil.getAuthPhone()).password(newPassword).build();
+                student.setUpdateTime(new Date());
+                if (studentMapper.update(student) == 1) {
+                    return RespBean.ok("更新成功");
+                }
             }
         }
         throw new IllegalArgumentException("更新失败");

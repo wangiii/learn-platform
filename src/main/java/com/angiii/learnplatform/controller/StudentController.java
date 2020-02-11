@@ -2,6 +2,7 @@ package com.angiii.learnplatform.controller;
 
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.RespBean;
+import com.angiii.learnplatform.domain.dto.StudentPasswordRequest;
 import com.angiii.learnplatform.domain.entity.Student;
 import com.angiii.learnplatform.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,15 +40,14 @@ public class StudentController {
     }
 
     @PostMapping("/")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean addStudent(Student student) {
         return studentService.save(student);
     }
 
-    @PutMapping("/{phone}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public RespBean updateStudent(@PathVariable(name = "phone") String phone, Student student) {
-        return studentService.update(phone, student);
+    @PutMapping("/")
+    @PreAuthorize("hasAnyRole('ROLE_STUDENT')")
+    public RespBean updateStudent(StudentPasswordRequest studentPasswordRequest) {
+        return studentService.update(studentPasswordRequest);
     }
 
     @GetMapping("/{phone}")

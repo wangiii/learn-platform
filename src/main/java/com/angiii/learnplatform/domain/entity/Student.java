@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student extends BaseEntity implements Serializable {

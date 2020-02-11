@@ -15,6 +15,9 @@ public interface StudentMapper {
     })
     Student selectStudentByPhone(@Param("phone") String phone);
 
+    @Select("select password from tb_student where phone = #{phone} limit 1")
+    String selectStudentPasswordByPhone(@Param("phone") String phone);
+
     @Select("select s.id as id, s.name as name, s.phone as phone, " +
             "f.id as facultyId, f.name as facultyName, m.id as majorId, m.name as majorName, " +
             "s.updated_at as updateTime, s.created_at as createTime " +
@@ -52,7 +55,7 @@ public interface StudentMapper {
     int insert(Student student);
 
     @Update("update tb_student set " +
-            "name = #{name}, password = #{password}, updated_at = #{updateTime} " +
+            "password = #{password}, updated_at = #{updateTime} " +
             "where phone = #{phone}")
     int update(Student student);
 
