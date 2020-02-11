@@ -11,6 +11,7 @@ import com.angiii.learnplatform.domain.entity.Teacher;
 import com.angiii.learnplatform.util.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +32,13 @@ public class TeacherService {
     @Autowired
     private TeacherCourseMapper teacherCourseMapper;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public RespBean save(Teacher teacher) {
         teacher.setCreateTime(new Date());
         teacher.setUpdateTime(new Date());
+        teacher.setPassword(bCryptPasswordEncoder.encode(teacher.getPassword()));
         if (teacherMapper.insert(teacher) == 1) {
             return RespBean.ok("添加成功", teacher);
         }

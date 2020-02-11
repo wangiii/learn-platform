@@ -8,6 +8,7 @@ import com.angiii.learnplatform.domain.entity.Student;
 import com.angiii.learnplatform.mapper.StudentMapper;
 import com.angiii.learnplatform.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ public class StudentService {
 
     @Autowired
     private StudentMapper studentMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public RespBean all(PageRequest pageRequest) {
         Integer total = studentMapper.getAllCount();
@@ -51,6 +55,7 @@ public class StudentService {
         if (student != null && student.getName() != null && student.getPhone() != null) {
             student.setUpdateTime(new Date());
             student.setCreateTime(new Date());
+            student.setPassword(bCryptPasswordEncoder.encode(student.getPassword()));
             if (studentMapper.insert(student) == 1) {
                 return RespBean.ok("添加成功", student);
             }

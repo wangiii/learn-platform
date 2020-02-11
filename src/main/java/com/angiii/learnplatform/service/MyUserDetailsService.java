@@ -1,6 +1,8 @@
 package com.angiii.learnplatform.service;
 
+import com.angiii.learnplatform.domain.entity.Student;
 import com.angiii.learnplatform.mapper.AdminMapper;
+import com.angiii.learnplatform.mapper.StudentMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.domain.entity.Admin;
 import com.angiii.learnplatform.domain.entity.Teacher;
@@ -19,18 +21,21 @@ import java.util.ArrayList;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    TeacherMapper teacherMapper;
+    private TeacherMapper teacherMapper;
 
     @Autowired
-    AdminMapper adminMapper;
+    private AdminMapper adminMapper;
+
+    @Autowired
+    private StudentMapper studentMapper;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
         Teacher teacher = teacherMapper.selectTeacherByPhoneForLoad(s);
+        ArrayList<GrantedAuthority> authorities = new ArrayList<>();
         if (teacher != null) {
             SimpleGrantedAuthority teacherAuthority = new SimpleGrantedAuthority("ROLE_TEACHER");
-            ArrayList<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(teacherAuthority);
             return new User(teacher.getPhone(), teacher.getPassword(), authorities);
         }
@@ -38,9 +43,15 @@ public class MyUserDetailsService implements UserDetailsService {
         Admin admin = adminMapper.selectAdminByPhone(s);
         if (admin != null) {
             SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
-            ArrayList<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(adminAuthority);
             return new User(admin.getPhone(), admin.getPassword(), authorities);
+        }
+
+        Student student = studentMapper.selectStudentByPhone(s);
+        if (student != null) {
+            SimpleGrantedAuthority studentAuthority = new SimpleGrantedAuthority("ROLE_STUDENT");
+            authorities.add(studentAuthority);
+            return new User(student.getPhone(), student.getPassword(), authorities);
         }
         throw new UsernameNotFoundException("用户名或者密码错误");
     }

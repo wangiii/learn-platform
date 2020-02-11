@@ -1,6 +1,8 @@
 package com.angiii.learnplatform.service;
 
+import com.angiii.learnplatform.domain.entity.Student;
 import com.angiii.learnplatform.mapper.AdminMapper;
+import com.angiii.learnplatform.mapper.StudentMapper;
 import com.angiii.learnplatform.mapper.TeacherMapper;
 import com.angiii.learnplatform.domain.dto.AuthenticationRequest;
 import com.angiii.learnplatform.domain.dto.AuthenticationResponse;
@@ -35,6 +37,9 @@ public class LoginService {
 
     @Autowired
     private TeacherMapper teacherMapper;
+
+    @Autowired
+    private StudentMapper studentMapper;
 
     @Autowired
     private JwtUtil jwtTokenUtil;
@@ -75,6 +80,14 @@ public class LoginService {
             Teacher teacher = teacherMapper.selectTeacherByPhone(authenticationRequest.getUsername());
             if (teacher != null) {
                 userName = teacher.getName();
+            }
+        }
+
+        if (roles.contains("ROLE_STUDENT")) {
+            role = "ROLE_STUDENT";
+            Student student = studentMapper.selectStudentByPhone(authenticationRequest.getUsername());
+            if (student != null) {
+                userName = student.getName();
             }
         }
 
