@@ -50,8 +50,8 @@ public interface StudentMapper {
     @Select("select count(*) from tb_student where phone like CONCAT(#{phone},'%') ")
     Integer getSearchCount(String phone);
 
-    @Insert("insert into tb_student(name, phone, password, created_at, updated_at) " +
-            "values(#{name}, #{phone}, #{password}, #{createTime}, #{updateTime})")
+    @Insert("insert into tb_student(name, phone, password, major_id, faculty_id, created_at, updated_at) " +
+            "values(#{name}, #{phone}, #{password}, #{major.id}, #{faculty.id}, #{createTime}, #{updateTime})")
     int insert(Student student);
 
     @Update("update tb_student set " +

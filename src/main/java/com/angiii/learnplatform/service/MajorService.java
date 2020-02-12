@@ -81,6 +81,10 @@ public class MajorService {
         return RespBean.ok("查询成功", majorMapper.selectAllMajors());
     }
 
+    public RespBean getMajorsDtoByFaculty(Long facultyId) {
+        return RespBean.ok("查询成功", majorMapper.selectMajorsDtoByFaculty(facultyId));
+    }
+
     public RespBean getMajorsByFacultyId(Long facultyId) {
         if (facultyId == null) {
             return RespBean.ok("查询成功", majorMapper.selectMajors());

@@ -37,6 +37,11 @@ public class MajorController {
         return majorService.getAllMajors();
     }
 
+    @GetMapping("/dto/{facultyId}")
+    public RespBean getMajorDtoByFaculty(@PathVariable(name = "facultyId") Long facultyId) {
+        return majorService.getMajorsDtoByFaculty(facultyId);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean deleteMajor(@PathVariable(name = "id") Long id) {

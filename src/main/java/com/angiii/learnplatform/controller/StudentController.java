@@ -41,6 +41,7 @@ public class StudentController {
 
     @PostMapping("/")
     public RespBean addStudent(Student student) {
+        log.info("student:{}", student);
         return studentService.save(student);
     }
 

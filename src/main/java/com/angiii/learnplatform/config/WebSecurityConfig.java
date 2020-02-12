@@ -49,7 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers(HttpMethod.GET, "/faculty/getAllWithMajor").permitAll(). // 前台选择院系菜单
                 antMatchers(HttpMethod.GET, "/course/withoutMajor").permitAll(). // 前台课程列表
                 antMatchers(HttpMethod.GET, "/course/byMajorId/*").permitAll(). // 前台课程列表
-                antMatchers(HttpMethod.POST, "/student/").permitAll(). // 前台课程列表
+                antMatchers(HttpMethod.GET, "/faculty/dto").permitAll(). // 前台院系列表
+                antMatchers(HttpMethod.GET, "/major/dto/*").permitAll(). // 前台专业列表
+                antMatchers(HttpMethod.POST, "/student/").permitAll(). // 前台学生注册
                 anyRequest().authenticated().and().
                 exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
