@@ -44,7 +44,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STUDENT')")
     public RespBean findCourseById(@PathVariable(name = "id") Long id) {
         return courseService.find(id);
     }

@@ -140,4 +140,9 @@ public class CourseResourceService {
         CourseResourceDTO dto = new CourseResourceDTO();
         return dto.convert(courseResources);
     }
+
+    public RespBean getResourceByCourse(ResourceTypeEnum resourceTypeEnum, Long courseId) {
+        List<CourseResource> courseResources = courseResourceMapper.getByCourse(resourceTypeEnum, courseId);
+        return RespBean.ok("查询成功", courseResources);
+    }
 }

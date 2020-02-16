@@ -56,10 +56,10 @@ public class CourseResourceController {
     }
 
     @GetMapping("/course/{courseId}")
-    public RespBean getByCourse(@PathVariable(name = "courseId") Long courseId, @RequestParam(value = "type") ResourceTypeEnum resourceTypeEnum, PageRequest pageRequest) {
-        log.info("pageRequest:{}", pageRequest);
+    @PreAuthorize("hasAnyRole('ROLE_STUDENT')")
+    public RespBean getByCourse(@PathVariable(name = "courseId") Long courseId, @RequestParam(value = "type") ResourceTypeEnum resourceTypeEnum) {
         log.info("courseId:{}", courseId);
         log.info("resourceTypeEnum:{}", resourceTypeEnum);
-        return courseResourceService.getByCourse(pageRequest, resourceTypeEnum, courseId);
+        return courseResourceService.getResourceByCourse(resourceTypeEnum, courseId);
     }
 }

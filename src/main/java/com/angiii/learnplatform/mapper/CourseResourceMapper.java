@@ -82,4 +82,17 @@ public interface CourseResourceMapper {
             @Result(property = "teacher.name", column = "teacherName")
     })
     List<CourseResource> getPageByCourse(Integer start, Integer amount, ResourceTypeEnum resourceTypeEnum, Long courseId);
+
+    @Select("select r.id as id, r.name as name, r.url as url, r.type as type, " +
+            "r.created_at as createTime, r.updated_at as updateTime, " +
+            "t.id as teacherId, t.name as teacherName " +
+            "from tb_resource r " +
+            "left join tb_teacher t on r.teacher_id = t.id " +
+            "where r.type = #{resourceTypeEnum} and r.course_id = #{courseId} ORDER BY id DESC")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "teacher.id", column = "teacherId"),
+            @Result(property = "teacher.name", column = "teacherName")
+    })
+    List<CourseResource> getByCourse(ResourceTypeEnum resourceTypeEnum, Long courseId);
 }
