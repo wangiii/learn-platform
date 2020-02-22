@@ -54,4 +54,10 @@ public interface FacultyMapper {
             @Result(property = "updateTime", column = "updated_at")
     })
     List<Faculty> getAllWithMajor();
+
+    @Select("select * from tb_faculty")
+    List<Faculty> selectAllFaculty();
+
+    @Select("select COUNT(DISTINCT `course_id`) from `tb_major_course` where `major_id` in (select id from tb_major where `faculty_id` = #{id})")
+    int selectCourseCountByFaculty(Faculty faculty);
 }

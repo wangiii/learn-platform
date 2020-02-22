@@ -1,20 +1,27 @@
 package com.angiii.learnplatform.service;
 
+import com.angiii.learnplatform.domain.dto.FacultyPieRowDTO;
 import com.angiii.learnplatform.mapper.FacultyMapper;
 import com.angiii.learnplatform.domain.dto.PageRequest;
 import com.angiii.learnplatform.domain.dto.PageResponse;
 import com.angiii.learnplatform.domain.entity.Faculty;
 import com.angiii.learnplatform.domain.dto.RespBean;
 import com.angiii.learnplatform.util.PageUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
 @Transactional
+@CacheConfig(cacheNames = {"facultyService"})
+@Slf4j
 public class FacultyService {
 
     @Autowired
@@ -72,5 +79,19 @@ public class FacultyService {
 
     public List<Faculty> getAllWithMajor() {
         return facultyMapper.getAllWithMajor();
+    }
+
+    @Cacheable(value = {"FacultyPieRow"})
+    public RespBean getFacultyPieRow() {
+        List<Faculty> faculties = facultyMapper.selectAllFaculty();
+        List<FacultyPieRowDTO> facultyPieRowDTOList = new ArrayList<>();
+        for (Faculty faculty : faculties) {
+            facultyPieRowDTOList.add(
+                FacultyPieRowDTO.builder().
+                        院系(faculty.getName()).
+                        在线课程数量(facultyMapper.selectCourseCountByFaculty(faculty)).build());
+        }
+        log.info("getFacultyPieRow(): {}",facultyPieRowDTOList);
+        return RespBean.ok("查询成功", facultyPieRowDTOList);
     }
 }

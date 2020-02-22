@@ -20,6 +20,12 @@ public class FacultyController {
     @Autowired
     FacultyService facultyService;
 
+    @GetMapping("/faculty-pie-row")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')")
+    public RespBean getFacultyPieRow() {
+        return facultyService.getFacultyPieRow();
+    }
+
     @PostMapping("/")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public RespBean addFaculty(Faculty faculty) {
