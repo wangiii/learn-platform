@@ -9,4 +9,6 @@
 - Spring Boot
 - Spring Security
 - MyBatis
-- 阿里云 OSS
+- OSS
+- MySQL
+- Redis
